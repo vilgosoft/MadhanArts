@@ -111,6 +111,10 @@
     margin-left: 0;
     padding: 24px;
   }
+
+  @include mobile {
+    padding: 16px;
+  }
 }
 
 // ──────────────────────────────────────
@@ -122,10 +126,14 @@
   align-items: center;
   margin-bottom: 32px;
   animation: fadeInUp 0.4s $ease-smooth;
+  flex-wrap: wrap;
+  gap: 16px;
 
   h1 {
     font-size: 1.6rem;
     color: $charcoal;
+
+    @include mobile { font-size: 1.3rem; }
   }
 
   &__btn {
@@ -214,10 +222,22 @@
 }
 
 // ──────────────────────────────────────
-// Admin Table — Modern design
+// Admin Table — Modern design with responsive scroll
 // ──────────────────────────────────────
+.admin-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: $border-radius;
+
+  @include tablet {
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+}
+
 .admin-table {
   width: 100%;
+  min-width: 640px;
   @include card;
   border-radius: $border-radius;
   border-collapse: collapse;
@@ -438,6 +458,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
+
+  @include mobile {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
 }
 
 .admin-gallery-card {
@@ -485,9 +510,33 @@
     }
   }
 
+  &__actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 14px 14px;
+  }
+
+  &__edit {
+    flex: 1;
+    padding: 8px 14px;
+    border: none;
+    border-radius: $border-radius-xl;
+    background: rgba($gold, 0.1);
+    color: $gold-dark;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+      background: rgba($gold, 0.2);
+      transform: translateY(-1px);
+    }
+  }
+
   &__delete {
-    margin: 0 14px 14px;
-    padding: 6px 14px;
+    flex: 1;
+    padding: 8px 14px;
     border: none;
     border-radius: $border-radius-xl;
     background: rgba($danger, 0.08);
@@ -496,10 +545,10 @@
     font-weight: 600;
     cursor: pointer;
     transition: $transition;
-    width: calc(100% - 28px);
 
     &:hover {
       background: rgba($danger, 0.15);
+      transform: translateY(-1px);
     }
   }
 }

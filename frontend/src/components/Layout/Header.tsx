@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Logo from '../common/Logo';
 import '../../styles/components/_header.scss';
 
 export default function Header() {
@@ -25,8 +26,10 @@ export default function Header() {
       <header className={`header ${scrolled ? 'header--scrolled' : ''}`}>
         <div className="header__inner">
           <Link to="/" className="header__logo">
-            <span className="header__logo-icon">&#9998;</span>
-            Madhan <span>Arts</span>
+            <Logo size={38} className="header__logo-svg" />
+            <span className="header__logo-text">
+              Madhan <span>Arts</span>
+            </span>
           </Link>
 
           <nav className="header__nav">

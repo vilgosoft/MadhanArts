@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import HomeCategoryCarousels from '../components/Home/HomeCategoryCarousels';
+import HeroShowcase from '../components/Gallery/HeroShowcase';
 import '../styles/components/_home.scss';
 
 const FEATURES = [
@@ -54,10 +55,7 @@ export default function HomePage() {
           </div>
 
           <div className="hero__visual">
-            <div className="hero__floating-card hero__floating-card--1">
-              <div className="hero__floating-card--1-label">Starting from</div>
-              <div className="hero__floating-card--1-value">&#8377;499</div>
-            </div>
+            <HeroShowcase />
           </div>
         </div>
 

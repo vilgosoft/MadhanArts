@@ -68,11 +68,18 @@
     align-items: center;
 
     @include tablet {
-      grid-template-columns: 1fr;
-      gap: 48px;
-      text-align: center;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
       padding-top: 120px;
       padding-bottom: 80px;
+    }
+
+    @include mobile {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      text-align: center;
+      padding-top: 100px;
+      padding-bottom: 60px;
     }
   }
 
@@ -112,6 +119,16 @@
     opacity: 0;
 
     @include tablet {
+      font-size: 0.95rem;
+      max-width: 360px;
+    }
+
+    @include mobile {
+      margin: 0 auto 32px;
+      font-size: 0.92rem;
+    }
+
+    @include tablet {
       margin: 0 auto 40px;
     }
   }
@@ -136,12 +153,16 @@
     @include btn-primary;
     padding: 16px 40px;
     font-size: 13px;
+
+    @include tablet { padding: 12px 28px; font-size: 12px; }
   }
 
   &__btn-secondary {
     @include btn-secondary;
     padding: 16px 40px;
     font-size: 13px;
+
+    @include tablet { padding: 12px 28px; font-size: 12px; }
     border-color: rgba($white, 0.3);
     color: $white;
 
@@ -151,54 +172,13 @@
     }
   }
 
-  // Right side — floating art preview
+  // Right side — art showcase
   &__visual {
     position: relative;
     animation: slideInRight 0.8s $ease-smooth;
 
-    @include tablet {
+    @include mobile {
       display: none;
-    }
-  }
-
-  &__floating-card {
-    @include glass-card;
-    padding: 16px;
-    position: absolute;
-    animation: gentleFloat 4s ease-in-out infinite;
-
-    &--1 {
-      top: 0;
-      right: 0;
-      width: 240px;
-      padding: 20px;
-      animation-delay: 0s;
-
-      &-label {
-        font-family: $font-accent;
-        color: $gold-light;
-        font-size: 1rem;
-        margin-bottom: 4px;
-      }
-
-      &-value {
-        color: $white;
-        font-family: $font-display;
-        font-size: 1.2rem;
-        font-weight: 600;
-      }
-    }
-
-    &--2 {
-      bottom: 40px;
-      left: 0;
-      animation-delay: 2s;
-    }
-
-    &--3 {
-      top: 50%;
-      right: -20px;
-      animation-delay: 1s;
     }
   }
 

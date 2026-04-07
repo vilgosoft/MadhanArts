@@ -11,6 +11,10 @@
   background: $cream;
   position: relative;
 
+  @include mobile {
+    padding: calc($header-height + 24px) 0 60px;
+  }
+
   &::before {
     content: '';
     position: absolute;
