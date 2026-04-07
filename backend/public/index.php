@@ -1,5 +1,12 @@
 <?php
 
+require_once __DIR__ . '/serve-upload.php';
+$__uriPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '/';
+if (strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
+    madhanarts_serve_upload_if_present($__uriPath);
+}
+unset($__uriPath);
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Router;
@@ -12,6 +19,8 @@ use App\Controllers\GalleryController;
 use App\Controllers\SizeController;
 use App\Controllers\PricingController;
 use App\Controllers\OrderController;
+use App\Controllers\UserController;
+use App\Helpers\Response;
 
 // ──────────────────────────────────────
 // Bootstrap
@@ -22,6 +31,18 @@ $router = new Router();
 
 // Global middleware
 $router->addMiddleware([CorsMiddleware::class, 'handle']);
+
+// Root (browser or health check — was returning "Route not found")
+$router->get('/api', static function (array $params): void {
+    Response::success([
+        'service' => 'Madhan Arts API',
+        'examples' => [
+            'GET /api/categories',
+            'GET /api/gallery',
+            'GET /api/sizes',
+        ],
+    ], 'OK');
+});
 
 // ──────────────────────────────────────
 // Auth Routes
@@ -91,6 +112,14 @@ $router->post('/api/pricing',       [PricingController::class, 'create'],
 $router->put('/api/pricing/:id',    [PricingController::class, 'update'],
     [[AdminMiddleware::class, 'handle']]);
 $router->delete('/api/pricing/:id', [PricingController::class, 'delete'],
+    [[AdminMiddleware::class, 'handle']]);
+
+// ──────────────────────────────────────
+// Users (Admin)
+// ──────────────────────────────────────
+$router->get('/api/users', [UserController::class, 'index'],
+    [[AdminMiddleware::class, 'handle']]);
+$router->put('/api/users/:id', [UserController::class, 'update'],
     [[AdminMiddleware::class, 'handle']]);
 
 // ──────────────────────────────────────

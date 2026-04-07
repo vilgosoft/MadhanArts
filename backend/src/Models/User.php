@@ -47,4 +47,44 @@ class User
         ]);
         return (int) $db->lastInsertId();
     }
+
+    public static function update(int $id, array $data): bool
+    {
+        $db = Database::getConnection();
+        $stmt = $db->prepare(
+            'UPDATE users SET name = :name, email = :email, phone = :phone WHERE id = :id'
+        );
+
+        return $stmt->execute([
+            'id'    => $id,
+            'name'  => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+        ]);
+    }
+
+    /**
+     * @return array{users: array<int, array>, total: int, page: int, limit: int, pages: int}
+     */
+    public static function findAll(int $page = 1, int $limit = 20): array
+    {
+        $db = Database::getConnection();
+        $offset = ($page - 1) * $limit;
+
+        $sql = 'SELECT id, name, email, phone, created_at, updated_at
+                FROM users
+                ORDER BY created_at DESC
+                LIMIT ' . (int) $limit . ' OFFSET ' . (int) $offset;
+
+        $users = $db->query($sql)->fetchAll();
+        $total = (int) $db->query('SELECT COUNT(*) FROM users')->fetchColumn();
+
+        return [
+            'users' => $users,
+            'total' => $total,
+            'page'  => $page,
+            'limit' => $limit,
+            'pages' => (int) ceil($total / $limit),
+        ];
+    }
 }

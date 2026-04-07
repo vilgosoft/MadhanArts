@@ -61,29 +61,46 @@ class AuthController
             Response::error('Name is required', 422);
         }
 
-        if (empty($body['email']) && empty($body['phone'])) {
+        $email = isset($body['email']) ? trim((string) $body['email']) : '';
+        $phone = isset($body['phone']) ? trim((string) $body['phone']) : '';
+        $email = $email !== '' ? $email : null;
+        $phone = $phone !== '' ? $phone : null;
+
+        if ($email === null && $phone === null) {
             Response::error('Email or phone is required', 422);
         }
 
+        if ($email !== null && !Validator::isValidEmail($email)) {
+            Response::error('Invalid email address', 422);
+        }
+
         // Check if user already exists
-        if (!empty($body['email'])) {
-            $existing = User::findByEmail($body['email']);
+        if ($email !== null) {
+            $existing = User::findByEmail($email);
             if ($existing) {
                 Response::error('Email already registered', 409);
             }
         }
-        if (!empty($body['phone'])) {
-            $existing = User::findByPhone($body['phone']);
+        if ($phone !== null) {
+            $existing = User::findByPhone($phone);
             if ($existing) {
                 Response::error('Phone already registered', 409);
             }
         }
 
-        $userId = User::create([
-            'name'  => Validator::sanitizeString($body['name']),
-            'email' => $body['email'] ?? null,
-            'phone' => $body['phone'] ?? null,
-        ]);
+        try {
+            $userId = User::create([
+                'name'  => Validator::sanitizeString($body['name']),
+                'email' => $email,
+                'phone' => $phone,
+            ]);
+        } catch (\PDOException $e) {
+            $sqlState = $e->errorInfo[0] ?? '';
+            if ($sqlState === '23000' || str_contains($e->getMessage(), 'Duplicate')) {
+                Response::error('Email or phone already registered', 409);
+            }
+            Response::error('Registration failed', 500);
+        }
 
         $config = require __DIR__ . '/../../config/app.php';
         $token = JWT::encode([

@@ -3,8 +3,7 @@ import { galleryApi, categoryApi } from '../../services/api';
 import type { GalleryItem, Category } from '../../types';
 import Modal from '../../components/common/Modal';
 import Loader from '../../components/common/Loader';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { resolveUploadUrl } from '../../utils/apiOrigin';
 
 export default function ManageGallery() {
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -64,7 +63,7 @@ export default function ManageGallery() {
         {items.map((item) => (
           <div key={item.id} style={{ background: '#fff', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
             <img
-              src={item.image_url.startsWith('http') ? item.image_url : `${API_URL}${item.image_url}`}
+              src={resolveUploadUrl(item.image_url)}
               alt={item.title || 'Gallery'}
               style={{ width: '100%', height: '200px', objectFit: 'cover' }}
             />

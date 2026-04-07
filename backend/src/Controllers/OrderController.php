@@ -60,6 +60,9 @@ class OrderController
         $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = uniqid('ref_') . '.' . $ext;
         $uploadDir = $config['upload_path'] . '/references';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
         $destPath = $uploadDir . '/' . $filename;
 
         if (!move_uploaded_file($file['tmp_name'], $destPath)) {
@@ -163,7 +166,8 @@ class OrderController
         }
 
         $config = require __DIR__ . '/../../config/app.php';
-        $filePath = $config['upload_path'] . str_replace('/uploads', '', $order['reference_photo']);
+        $rel = preg_replace('#^/uploads/#', '', $order['reference_photo']);
+        $filePath = $config['upload_path'] . '/' . $rel;
 
         if (!file_exists($filePath)) {
             Response::error('Photo file not found', 404);

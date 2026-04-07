@@ -70,6 +70,9 @@ class GalleryController
         $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = uniqid('gallery_') . '.' . $ext;
         $uploadDir = $config['upload_path'] . '/gallery';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
         $destPath = $uploadDir . '/' . $filename;
 
         if (!move_uploaded_file($file['tmp_name'], $destPath)) {
@@ -135,7 +138,8 @@ class GalleryController
 
         // Delete the file
         $config = require __DIR__ . '/../../config/app.php';
-        $filePath = $config['upload_path'] . '/' . ltrim($item['image_url'], '/uploads/');
+        $rel = preg_replace('#^/uploads/#', '', $item['image_url']);
+        $filePath = $config['upload_path'] . '/' . $rel;
         if (file_exists($filePath)) {
             unlink($filePath);
         }

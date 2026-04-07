@@ -1,0 +1,254 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.home-category-carousels {
+  padding: 56px 0 72px;
+  background: linear-gradient(180deg, #fff 0%, $off-white 40%, #faf9f7 100%);
+
+  &__loader-wrap {
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__intro {
+    text-align: center;
+    margin-bottom: 48px;
+
+    h2 {
+      font-family: $font-primary;
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      margin-bottom: 12px;
+      color: $black;
+    }
+
+    p {
+      color: $medium-gray;
+      line-height: 1.65;
+      font-size: 1rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+  }
+}
+
+.category-carousel-section {
+  margin-bottom: 56px;
+  padding: 0 0 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    font-family: $font-primary;
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    font-weight: 600;
+    color: $black;
+    margin: 0;
+  }
+
+  &__desc {
+    width: 100%;
+    flex-basis: 100%;
+    font-size: 0.95rem;
+    color: $medium-gray;
+    line-height: 1.55;
+    max-width: 640px;
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__gallery-link {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $accent;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: $font-secondary;
+
+    &:hover {
+      color: $accent-dark;
+    }
+  }
+}
+
+.category-carousel {
+  position: relative;
+  width: 100%;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+
+    @include mobile {
+      gap: 4px;
+    }
+  }
+
+  &__nav {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid $light-gray;
+    background: $white;
+    color: $primary;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: $shadow;
+    transition: $transition;
+
+    &:hover:not(:disabled) {
+      border-color: $accent;
+      color: $accent;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    @include mobile {
+      width: 38px;
+      height: 38px;
+      font-size: 1.25rem;
+    }
+  }
+
+  &__track {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    padding: 8px 4px 20px;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $light-gray;
+      border-radius: 3px;
+    }
+  }
+
+  &__card {
+    flex: 0 0 max(200px, min(280px, calc((100% - 54px) / 4)));
+    scroll-snap-align: start;
+    border-radius: $border-radius;
+    overflow: hidden;
+    background: $white;
+    box-shadow: $shadow;
+    transition: $transition;
+
+    &:hover {
+      box-shadow: $shadow-lg;
+      transform: translateY(-3px);
+    }
+  }
+
+  &__image-link {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: $light-gray;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__meta {
+    padding: 12px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__item-title {
+    font-family: $font-secondary;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: $black;
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  &__from {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: $accent-dark;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  &__card-order {
+    @include btn;
+    width: 100%;
+    margin-top: 2px;
+    padding: 9px 14px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+
+    &--standalone {
+      margin-top: 16px;
+      max-width: 260px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  &__empty {
+    padding: 32px 24px;
+    text-align: center;
+    color: $medium-gray;
+    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: $border-radius;
+    border: 1px dashed $light-gray;
+  }
+
+  &__empty-price {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $accent-dark;
+  }
+}

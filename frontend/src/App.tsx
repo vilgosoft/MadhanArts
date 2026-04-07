@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage';
+import GalleryPage from './pages/GalleryPage';
 import OrderPage from './pages/OrderPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import MyOrdersPage from './pages/MyOrdersPage';
@@ -12,6 +13,7 @@ import ManageCategories from './pages/admin/ManageCategories';
 import ManageGallery from './pages/admin/ManageGallery';
 import ManagePricing from './pages/admin/ManagePricing';
 import ManageOrders from './pages/admin/ManageOrders';
+import ManageUsers from './pages/admin/ManageUsers';
 
 export default function App() {
   return (
@@ -19,7 +21,7 @@ export default function App() {
       {/* Public Routes */}
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/gallery" element={<HomePage />} />
+        <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/order/:categoryId" element={<OrderPage />} />
         <Route path="/order-success" element={<OrderSuccessPage />} />
         <Route path="/my-orders" element={<MyOrdersPage />} />
@@ -35,6 +37,7 @@ export default function App() {
           <Route path="gallery" element={<ManageGallery />} />
           <Route path="pricing" element={<ManagePricing />} />
           <Route path="orders" element={<ManageOrders />} />
+          <Route path="users" element={<ManageUsers />} />
         </Route>
       </Route>
     </Routes>

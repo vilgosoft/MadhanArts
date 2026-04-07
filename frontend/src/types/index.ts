@@ -107,6 +107,24 @@ export interface PaginatedOrders {
   pages: number;
 }
 
+/** Customer accounts (admin user list) */
+export interface UserListRow {
+  id: number;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaginatedUsers {
+  users: UserListRow[];
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+}
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;

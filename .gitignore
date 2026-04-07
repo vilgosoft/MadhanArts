@@ -2,15 +2,22 @@
 frontend/node_modules/
 backend/vendor/
 
-# Uploads
+# Uploads (legacy path — new files go to public/uploads)
 backend/uploads/gallery/*
 backend/uploads/references/*
 !backend/uploads/gallery/.gitkeep
 !backend/uploads/references/.gitkeep
+backend/public/uploads/gallery/*
+backend/public/uploads/references/*
+!backend/public/uploads/gallery/.gitkeep
+!backend/public/uploads/references/.gitkeep
 
 # Environment
 .env
 backend/config/database.local.php
+
+# Local SQLite (auto-created when using default driver)
+backend/database/*.sqlite
 
 # Build output
 frontend/dist/

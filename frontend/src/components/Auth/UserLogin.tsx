@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/api';
 
@@ -30,8 +31,21 @@ export default function UserLogin() {
         login(res.data.data.token, res.data.data.user);
       }
       navigate(returnTo);
-    } catch {
-      setError(mode === 'register' ? 'Registration failed' : 'User not found');
+    } catch (err) {
+      const fallback = mode === 'register' ? 'Registration failed' : 'User not found';
+      if (axios.isAxiosError(err)) {
+        const data = err.response?.data;
+        if (data && typeof data === 'object') {
+          const d = data as { message?: string; error?: string };
+          setError(d.message || d.error || fallback);
+        } else if (err.code === 'ERR_NETWORK') {
+          setError('Cannot reach API. Is the server running (port 8000) and VITE_API_URL correct?');
+        } else {
+          setError(fallback);
+        }
+      } else {
+        setError(fallback);
+      }
     } finally {
       setLoading(false);
     }

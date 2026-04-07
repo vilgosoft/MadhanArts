@@ -9,7 +9,10 @@ class CorsMiddleware
         $config = require __DIR__ . '/../../config/app.php';
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-        if (in_array($origin, $config['allowed_origins'], true)) {
+        $allowOrigin = in_array($origin, $config['allowed_origins'], true)
+            || ($origin !== '' && preg_match('#^https?://(localhost|127\.0\.0\.1)(:\d+)?$#', $origin));
+
+        if ($allowOrigin) {
             header("Access-Control-Allow-Origin: $origin");
         }
 

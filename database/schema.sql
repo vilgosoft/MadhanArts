@@ -151,7 +151,7 @@ CREATE TABLE orders (
 -- bcrypt hash of "admin123"
 -- ============================================
 INSERT INTO admins (name, email, password) VALUES
-('Madhan', 'admin@madhanarts.com', '$2y$12$LJ3m4ys3Gz8y1w5TQf9z8OeYv7FG0oN3qHxK9R2vW1bXc4dE6fGhI');
+('Madhan', 'admin@madhanarts.com', '$2y$12$dOuQKUEeZYWsJVCdIj6veu5ruUT8BptOw.ERp4pw0KPhxe7KRMR6m');
 
 -- ============================================
 -- SEED: Default sizes

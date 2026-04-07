@@ -1,6 +1,48 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
+// ─── Dedicated /gallery route ─────────────────────────────────────────
+.gallery-page {
+  background: $white;
+
+  &__hero {
+    background: linear-gradient(160deg, #1a1a1a 0%, #2d2a26 45%, #1f1c18 100%);
+    color: $white;
+    padding: 72px 24px 56px;
+    text-align: center;
+    border-bottom: 3px solid $accent;
+  }
+
+  &__hero-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  &__eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: $accent;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  &__title {
+    font-family: $font-primary;
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.15;
+  }
+
+  &__lead {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.65;
+    margin: 0;
+  }
+}
+
 .gallery-section {
   padding: 80px 0;
 }

@@ -1,18 +1,15 @@
 import type { GalleryItem } from '../../types';
 import { useNavigate } from 'react-router-dom';
+import { resolveUploadUrl } from '../../utils/apiOrigin';
 import '../../styles/components/_gallery.scss';
 
 interface Props {
   item: GalleryItem;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-
 export default function GalleryCard({ item }: Props) {
   const navigate = useNavigate();
-  const imageUrl = item.image_url.startsWith('http')
-    ? item.image_url
-    : `${API_URL}${item.image_url}`;
+  const imageUrl = resolveUploadUrl(item.image_url);
 
   return (
     <div className="gallery-card">

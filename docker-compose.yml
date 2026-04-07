@@ -1,0 +1,30 @@
+# Local MySQL when XAMPP/WAMP MySQL is not installed or not running.
+# Requires Docker Desktop: https://docs.docker.com/desktop/
+#
+# From repo root:
+#   docker compose up -d
+#
+# Then set backend/config/database.local.php password to: madhanarts
+# (see backend/config/database.local.docker.example.php)
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: madhanarts-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: madhanarts
+      MYSQL_DATABASE: madhan_arts
+    volumes:
+      - madhanarts_mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pmadhanarts"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  madhanarts_mysql_data:

@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { orderApi } from '../../services/api';
 import type { Order, OrderStatus } from '../../types';
 import Loader from '../../components/common/Loader';
+import { getApiOrigin } from '../../utils/apiOrigin';
 
 const STATUS_OPTIONS: OrderStatus[] = ['received', 'in_progress', 'completed', 'delivered', 'cancelled'];
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const apiOrigin = getApiOrigin();
 
 export default function ManageOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -75,7 +76,7 @@ export default function ManageOrders() {
                   <td>₹{parseFloat(order.amount).toLocaleString('en-IN')}</td>
                   <td>
                     <a
-                      href={`${API_URL}/api/orders/${order.id}/photo`}
+                      href={`${apiOrigin}/api/orders/${order.id}/photo`}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ color: '#c9a96e', fontSize: '0.85rem' }}

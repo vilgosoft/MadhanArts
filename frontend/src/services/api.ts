@@ -9,6 +9,8 @@ import type {
   PriceCalculation,
   Order,
   PaginatedOrders,
+  PaginatedUsers,
+  UserListRow,
   AuthUser,
 } from '../types';
 
@@ -130,6 +132,17 @@ export const pricingApi = {
 
   delete: (id: number) =>
     api.delete<ApiResponse<null>>(`/pricing/${id}`),
+};
+
+// ──────────────────────────────────────
+// Users (admin)
+// ──────────────────────────────────────
+export const userApi = {
+  list: (page = 1, limit = 20) =>
+    api.get<ApiResponse<PaginatedUsers>>('/users', { params: { page, limit } }),
+
+  update: (id: number, data: { name: string; email?: string; phone?: string }) =>
+    api.put<ApiResponse<UserListRow>>(`/users/${id}`, data),
 };
 
 // ──────────────────────────────────────

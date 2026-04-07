@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import GalleryGrid from '../components/Gallery/GalleryGrid';
+import HomeCategoryCarousels from '../components/Home/HomeCategoryCarousels';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -39,9 +39,8 @@ export default function HomePage() {
           From pencil sketches to oil paintings — every piece tells your story.
         </p>
         <button
-          onClick={() => {
-            document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
-          }}
+          type="button"
+          onClick={() => navigate('/gallery')}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -62,10 +61,7 @@ export default function HomePage() {
         </button>
       </section>
 
-      {/* Gallery Section */}
-      <div id="gallery">
-        <GalleryGrid />
-      </div>
+      <HomeCategoryCarousels />
 
       {/* CTA Section */}
       <section
@@ -89,6 +85,7 @@ export default function HomePage() {
           Choose a category and place your order in just 3 simple steps.
         </p>
         <button
+          type="button"
           onClick={() => navigate('/gallery')}
           style={{
             padding: '12px 32px',
@@ -103,7 +100,7 @@ export default function HomePage() {
             cursor: 'pointer',
           }}
         >
-          Browse Categories
+          Browse categories
         </button>
       </section>
     </>

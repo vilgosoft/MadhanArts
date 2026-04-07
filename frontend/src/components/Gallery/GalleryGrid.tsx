@@ -30,8 +30,8 @@ export default function GalleryGrid() {
     <section className="gallery-section">
       <div className="container">
         <div className="section-title">
-          <h2>Our Portfolio</h2>
-          <p>Each artwork is crafted with passion and precision</p>
+          <h2>Our portfolio</h2>
+          <p>Each piece is handcrafted — use the filters to explore by style</p>
         </div>
 
         <CategoryFilter
