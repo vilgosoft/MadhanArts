@@ -9,26 +9,27 @@ interface Props {
 }
 
 export default function PriceSummary({ categoryName, sizeLabel, price, currency, photoPreview }: Props) {
-  const symbol = currency === 'INR' ? '₹' : '$';
+  const symbol = currency === 'INR' ? '\u20B9' : '$';
   const formatted = `${symbol}${parseFloat(price).toLocaleString('en-IN')}`;
 
   return (
     <div className="price-summary">
       <div className="price-summary__amount">{formatted}</div>
+      <div className="price-summary__currency">Total Amount ({currency})</div>
 
       <div className="price-summary__details">
         <table>
           <tbody>
             <tr>
-              <td>Category</td>
+              <td>Art Style</td>
               <td>{categoryName}</td>
             </tr>
             <tr>
-              <td>Size</td>
+              <td>Canvas Size</td>
               <td>{sizeLabel}</td>
             </tr>
             <tr>
-              <td>Total</td>
+              <td>Amount</td>
               <td><strong>{formatted}</strong></td>
             </tr>
           </tbody>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/api';
+import '../../styles/components/_auth.scss';
 
 export default function UserLogin() {
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -31,70 +32,52 @@ export default function UserLogin() {
       }
       navigate(returnTo);
     } catch {
-      setError(mode === 'register' ? 'Registration failed' : 'User not found');
+      setError(mode === 'register' ? 'Registration failed. Please try again.' : 'User not found. Please register first.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '120px auto', padding: '0 24px' }}>
-      <div className="wizard-card">
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-card__icon">
+          {mode === 'login' ? '\u{1F44B}' : '\u2728'}
+        </div>
         <h2>{mode === 'login' ? 'Welcome Back' : 'Create Account'}</h2>
-        <p>{mode === 'login' ? 'Sign in with your email or phone' : 'Register to place orders'}</p>
+        <p className="auth-card__subtitle">
+          {mode === 'login' ? 'Sign in to place orders and track commissions' : 'Register to start ordering custom artwork'}
+        </p>
 
         <form onSubmit={handleSubmit}>
           {mode === 'register' && (
             <div className="modal__field">
               <label>Full Name</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Your full name" />
             </div>
           )}
           <div className="modal__field">
             <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
           </div>
           <div className="modal__field">
             <label>Phone</label>
-            <input
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+91 9876543210"
-            />
+            <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 9876543210" />
           </div>
 
-          {error && <p style={{ color: '#e74c3c', fontSize: '0.85rem', marginBottom: '16px' }}>{error}</p>}
+          {error && <div className="auth-card__error">{error}</div>}
 
-          <button
-            type="submit"
-            className="wizard-nav__next"
-            style={{ width: '100%' }}
-            disabled={loading}
-          >
-            {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Register'}
+          <button type="submit" className="auth-card__submit" disabled={loading}>
+            {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '0.85rem', color: '#999' }}>
+        <div className="auth-card__switch">
           {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
-          <button
-            type="button"
-            onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-            style={{ background: 'none', border: 'none', color: '#c9a96e', cursor: 'pointer', fontWeight: 500 }}
-          >
+          <button type="button" onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}>
             {mode === 'login' ? 'Register' : 'Sign In'}
           </button>
-        </p>
+        </div>
       </div>
     </div>
   );

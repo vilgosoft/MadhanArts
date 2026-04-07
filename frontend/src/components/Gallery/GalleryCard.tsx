@@ -15,21 +15,30 @@ export default function GalleryCard({ item }: Props) {
     : `${API_URL}${item.image_url}`;
 
   return (
-    <div className="gallery-card">
+    <div className="gallery-card" onClick={() => navigate(`/order/${item.category_id}`)}>
       <div className="gallery-card__image-wrapper">
         <img
           className="gallery-card__image"
           src={imageUrl}
-          alt={item.title || 'Gallery image'}
+          alt={item.title || 'Artwork by Madhan Arts'}
           loading="lazy"
         />
         <div className="gallery-card__overlay">
-          <button
-            className="gallery-card__overlay-btn"
-            onClick={() => navigate(`/order/${item.category_id}`)}
-          >
-            Order Now
-          </button>
+          <div className="gallery-card__overlay-content">
+            {item.title && (
+              <div className="gallery-card__overlay-title">{item.title}</div>
+            )}
+            <div className="gallery-card__overlay-category">{item.category_name}</div>
+            <button
+              className="gallery-card__overlay-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/order/${item.category_id}`);
+              }}
+            >
+              Order This Style
+            </button>
+          </div>
         </div>
       </div>
       <div className="gallery-card__info">

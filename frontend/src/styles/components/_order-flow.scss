@@ -2,122 +2,275 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
+// ──────────────────────────────────────
+// Order Page
+// ──────────────────────────────────────
 .order-page {
-  padding: calc($header-height + 40px) 0 80px;
+  padding: calc($header-height + 48px) 0 100px;
   min-height: 100vh;
+  background: $cream;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 400px;
+    background: $gradient-hero;
+    clip-path: ellipse(80% 100% at 50% 0%);
+  }
+
+  .section-title {
+    position: relative;
+    z-index: 1;
+
+    h2 { color: $white; }
+    p  { color: rgba($white, 0.65); }
+
+    &::after {
+      background: $gradient-gold;
+    }
+  }
 }
 
-// Step indicator
+// ──────────────────────────────────────
+// Step Indicator — Animated circles
+// ──────────────────────────────────────
 .step-indicator {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 0;
   margin-bottom: 48px;
+  position: relative;
+  z-index: 1;
+  animation: fadeInDown 0.6s $ease-smooth forwards;
 
   &__step {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 
-    &-number {
-      width: 36px;
-      height: 36px;
+    &-circle {
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       @include flex-center;
       font-size: 0.85rem;
-      font-weight: 600;
-      border: 2px solid $light-gray;
-      color: $medium-gray;
+      font-weight: 700;
+      border: 2px solid rgba($white, 0.2);
+      color: rgba($white, 0.4);
+      background: rgba($white, 0.05);
+      backdrop-filter: blur(8px);
       transition: $transition;
+      position: relative;
+
+      // Pulse ring for active
+      &::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        transition: $transition;
+      }
     }
 
     &-label {
       font-size: 0.85rem;
-      color: $medium-gray;
+      font-weight: 500;
+      color: rgba($white, 0.4);
+      transition: $transition;
+      white-space: nowrap;
 
       @include mobile {
         display: none;
       }
     }
 
-    &--active &-number {
-      background: $accent;
-      border-color: $accent;
-      color: $white;
+    &--active &-circle {
+      background: $gradient-gold;
+      border-color: $gold;
+      color: $charcoal;
+      box-shadow: $shadow-gold, 0 0 20px rgba($gold, 0.3);
+      transform: scale(1.1);
+
+      &::after {
+        border-color: rgba($gold, 0.3);
+        animation: pulse 2s ease-in-out infinite;
+      }
     }
 
     &--active &-label {
-      color: $dark-gray;
-      font-weight: 500;
+      color: $white;
+      font-weight: 600;
     }
 
-    &--done &-number {
+    &--done &-circle {
       background: $success;
       border-color: $success;
       color: $white;
+      box-shadow: 0 4px 12px rgba($success, 0.3);
+    }
+
+    &--done &-label {
+      color: rgba($white, 0.7);
     }
   }
 
   &__connector {
-    width: 40px;
+    width: 48px;
     height: 2px;
-    background: $light-gray;
+    margin: 0 8px;
+    background: rgba($white, 0.15);
+    position: relative;
+    overflow: hidden;
 
-    &--done {
-      background: $success;
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0;
+      background: $gradient-gold;
+      transition: width 0.6s $ease-smooth;
+    }
+
+    &--done::after {
+      width: 100%;
+    }
+
+    @include mobile {
+      width: 24px;
     }
   }
 }
 
-// Wizard card
+// ──────────────────────────────────────
+// Wizard Card — Glass morphism
+// ──────────────────────────────────────
 .wizard-card {
-  @include card;
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 40px;
+  background: $white;
+  border-radius: $border-radius-lg;
+  padding: 48px;
+  box-shadow: $shadow-lg;
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.5s $ease-smooth forwards;
+  overflow: hidden;
+
+  // Decorative corner accent
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    background: $gradient-gold;
+    opacity: 0.06;
+    border-radius: 0 0 80px 0;
+  }
 
   @include mobile {
-    padding: 24px;
+    padding: 28px 20px;
+    border-radius: $border-radius;
+    margin: 0 8px;
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    color: $charcoal;
     margin-bottom: 8px;
   }
 
-  p {
+  > p {
     color: $medium-gray;
-    margin-bottom: 32px;
+    margin-bottom: 36px;
+    font-size: 0.95rem;
   }
 }
 
-// Photo upload
+// ──────────────────────────────────────
+// Photo Upload — Artistic dropzone
+// ──────────────────────────────────────
 .photo-upload {
   &__dropzone {
     border: 2px dashed $light-gray;
-    border-radius: $border-radius;
-    padding: 48px;
+    border-radius: $border-radius-lg;
+    padding: 56px 32px;
     text-align: center;
     cursor: pointer;
     transition: $transition;
+    position: relative;
+    background: rgba($cream, 0.5);
 
-    &:hover, &--active {
-      border-color: $accent;
-      background: rgba($accent, 0.03);
+    // Corner decorations
+    &::before, &::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+    &::before {
+      top: 12px;
+      left: 12px;
+      border-top-color: $light-gray;
+      border-left-color: $light-gray;
+      border-radius: 4px 0 0 0;
+    }
+    &::after {
+      bottom: 12px;
+      right: 12px;
+      border-bottom-color: $light-gray;
+      border-right-color: $light-gray;
+      border-radius: 0 0 4px 0;
     }
 
-    svg {
-      width: 48px;
-      height: 48px;
+    &:hover, &--active {
+      border-color: $gold;
+      background: rgba($gold, 0.03);
+
+      &::before {
+        border-top-color: $gold;
+        border-left-color: $gold;
+      }
+      &::after {
+        border-bottom-color: $gold;
+        border-right-color: $gold;
+      }
+
+      .photo-upload__dropzone-icon {
+        transform: translateY(-4px);
+        color: $gold;
+      }
+    }
+
+    &-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 20px;
       color: $medium-gray;
-      margin-bottom: 16px;
+      transition: $transition;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
     }
 
     h3 {
-      font-family: $font-secondary;
-      font-size: 1rem;
-      font-weight: 500;
+      font-family: $font-body;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: $dark-gray;
       margin-bottom: 8px;
     }
 
@@ -128,142 +281,246 @@
   }
 
   &__preview {
-    margin-top: 24px;
+    margin-top: 28px;
     position: relative;
     display: inline-block;
+    animation: fadeInScale 0.4s $ease-bounce forwards;
 
     img {
-      max-height: 300px;
+      max-height: 320px;
       border-radius: $border-radius;
-      box-shadow: $shadow;
+      box-shadow: $shadow-lg;
     }
 
-    button {
+    &-remove {
       position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 28px;
-      height: 28px;
+      top: -8px;
+      right: -8px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background: $danger;
       color: $white;
-      border: none;
+      border: 3px solid $white;
       cursor: pointer;
       @include flex-center;
       font-size: 14px;
+      font-weight: 700;
+      box-shadow: $shadow;
+      transition: $transition;
+
+      &:hover {
+        transform: scale(1.15);
+        background: color.adjust($danger, $lightness: -8%);
+      }
     }
   }
 }
 
-// Size selector
+// ──────────────────────────────────────
+// Size Selector — Artistic cards
+// ──────────────────────────────────────
 .size-selector {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 16px;
 
   &__option {
-    @include card;
-    padding: 20px;
+    background: $white;
+    border: 2px solid $light-gray;
+    border-radius: $border-radius;
+    padding: 24px 16px;
     text-align: center;
     cursor: pointer;
-    border: 2px solid transparent;
     transition: $transition;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeInUp 0.4s $ease-smooth forwards;
+    @include stagger-children(10, 0.06s);
+
+    // Decorative top bar
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: $gradient-gold;
+      transform: scaleX(0);
+      transition: transform 0.3s $ease-smooth;
+    }
 
     &:hover {
-      border-color: $accent;
+      border-color: $gold;
+      transform: translateY(-4px);
+      box-shadow: $shadow;
+
+      &::before {
+        transform: scaleX(1);
+      }
     }
 
     &--selected {
-      border-color: $accent;
-      background: rgba($accent, 0.05);
+      border-color: $gold;
+      background: rgba($gold, 0.04);
+      box-shadow: $shadow-gold;
+      transform: translateY(-4px);
+
+      &::before {
+        transform: scaleX(1);
+      }
+
+      // Check mark
+      &::after {
+        content: '\2713';
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 22px;
+        height: 22px;
+        background: $gold;
+        color: $white;
+        border-radius: 50%;
+        @include flex-center;
+        font-size: 11px;
+        font-weight: 700;
+        animation: scaleIn 0.3s $ease-bounce;
+      }
     }
 
     h4 {
-      font-family: $font-secondary;
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-family: $font-display;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: $charcoal;
       margin-bottom: 4px;
     }
 
-    span {
-      font-size: 0.8rem;
+    &-desc {
+      font-size: 0.78rem;
       color: $medium-gray;
     }
 
-    .price {
+    &-price {
       display: block;
-      margin-top: 12px;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: $accent-dark;
+      margin-top: 14px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      @include text-gradient($gradient-sunset);
     }
   }
 }
 
-// Price summary
+// ──────────────────────────────────────
+// Price Summary — Artistic receipt
+// ──────────────────────────────────────
 .price-summary {
   text-align: center;
+  animation: fadeIn 0.5s ease;
 
   &__amount {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: $accent-dark;
-    font-family: $font-primary;
-    margin-bottom: 8px;
+    font-size: 3rem;
+    font-weight: 800;
+    font-family: $font-display;
+    @include text-gradient($gradient-sunset);
+    margin-bottom: 4px;
+    animation: fadeInScale 0.5s $ease-bounce forwards;
+  }
+
+  &__currency {
+    font-size: 0.85rem;
+    color: $medium-gray;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
   }
 
   &__details {
-    margin: 24px 0;
+    margin: 32px 0;
+    background: $cream;
+    border-radius: $border-radius;
+    padding: 24px;
 
     table {
       width: 100%;
       border-collapse: collapse;
 
       td {
-        padding: 12px 0;
-        border-bottom: 1px solid $light-gray;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba($light-gray, 0.7);
 
         &:first-child {
           text-align: left;
           color: $medium-gray;
+          font-size: 0.9rem;
         }
 
         &:last-child {
           text-align: right;
-          font-weight: 500;
+          font-weight: 600;
+          color: $charcoal;
         }
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+        font-size: 1.1rem;
       }
     }
   }
 
   &__photo {
-    margin: 24px auto;
-    max-width: 200px;
+    margin: 28px auto;
+    max-width: 220px;
 
     img {
       border-radius: $border-radius;
-      box-shadow: $shadow;
+      box-shadow: $shadow-lg;
+      border: 3px solid $white;
     }
   }
 }
 
-// Wizard navigation
+// ──────────────────────────────────────
+// Wizard Navigation
+// ──────────────────────────────────────
 .wizard-nav {
   display: flex;
   justify-content: space-between;
-  margin-top: 32px;
-  padding-top: 24px;
+  margin-top: 36px;
+  padding-top: 28px;
   border-top: 1px solid $light-gray;
 
   &__back {
-    @include btn($light-gray, $dark-gray);
+    @include btn-ghost;
+    color: $dark-gray;
+    border-color: $light-gray;
+    background: rgba($charcoal, 0.04);
 
     &:hover {
-      background: color.adjust($light-gray, $lightness: -5%);
+      background: rgba($charcoal, 0.08);
+      color: $charcoal;
     }
   }
 
   &__next {
-    @include btn;
+    @include btn-primary;
   }
+}
+
+// ──────────────────────────────────────
+// Error message
+// ──────────────────────────────────────
+.wizard-error {
+  background: rgba($danger, 0.08);
+  border: 1px solid rgba($danger, 0.2);
+  border-radius: $border-radius-sm;
+  padding: 12px 16px;
+  color: $danger;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 16px;
+  animation: fadeIn 0.3s ease;
 }

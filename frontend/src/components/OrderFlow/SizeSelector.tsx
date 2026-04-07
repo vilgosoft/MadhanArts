@@ -7,7 +7,7 @@ import '../../styles/components/_order-flow.scss';
 interface Props {
   categoryId: number;
   selectedSizeId: number | null;
-  onSelect: (sizeId: number, price: string, currency: string) => void;
+  onSelect: (sizeId: number, price: string, currency: string, sizeLabel: string) => void;
 }
 
 export default function SizeSelector({ categoryId, selectedSizeId, onSelect }: Props) {
@@ -21,10 +21,15 @@ export default function SizeSelector({ categoryId, selectedSizeId, onSelect }: P
     });
   }, [categoryId]);
 
-  if (loading) return <Loader text="Loading sizes..." />;
+  if (loading) return <Loader text="Loading available sizes..." />;
 
   if (rules.length === 0) {
-    return <p style={{ color: '#999', textAlign: 'center' }}>No sizes available for this category.</p>;
+    return (
+      <div className="gallery-empty">
+        <div className="gallery-empty__icon">&#128207;</div>
+        <p>No sizes available for this category yet.</p>
+      </div>
+    );
   }
 
   return (
@@ -33,12 +38,15 @@ export default function SizeSelector({ categoryId, selectedSizeId, onSelect }: P
         <div
           key={rule.size_id}
           className={`size-selector__option ${selectedSizeId === rule.size_id ? 'size-selector__option--selected' : ''}`}
-          onClick={() => onSelect(rule.size_id, rule.price, rule.currency)}
+          onClick={() => onSelect(rule.size_id, rule.price, rule.currency, rule.size_label)}
         >
           <h4>{rule.size_label}</h4>
-          {rule.size_description && <span>{rule.size_description}</span>}
-          <span className="price">
-            {rule.currency === 'INR' ? '₹' : '$'}{parseFloat(rule.price).toLocaleString('en-IN')}
+          {rule.size_description && (
+            <span className="size-selector__option-desc">{rule.size_description}</span>
+          )}
+          <span className="size-selector__option-price">
+            {rule.currency === 'INR' ? '\u20B9' : '$'}
+            {parseFloat(rule.price).toLocaleString('en-IN')}
           </span>
         </div>
       ))}

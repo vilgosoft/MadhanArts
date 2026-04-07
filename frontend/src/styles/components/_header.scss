@@ -7,11 +7,16 @@
   left: 0;
   right: 0;
   height: $header-height;
-  background: $white;
-  box-shadow: $shadow;
   z-index: 1000;
-  display: flex;
-  align-items: center;
+  transition: $transition;
+  background: rgba($white, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba($gold, 0.1);
+
+  &--scrolled {
+    background: rgba($white, 0.95);
+    box-shadow: $shadow;
+  }
 
   &__inner {
     @include container;
@@ -19,35 +24,94 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    height: 100%;
   }
 
+  // Artistic logo
   &__logo {
-    font-family: $font-primary;
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: $black;
-    letter-spacing: 1px;
+    font-family: $font-display;
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: $charcoal;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    transition: $transition;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+
+    // Decorative paint stroke
+    &-icon {
+      width: 36px;
+      height: 36px;
+      background: $gradient-gold;
+      border-radius: 50%;
+      @include flex-center;
+      font-size: 1rem;
+      box-shadow: $shadow-gold;
+      transition: $transition;
+    }
+
+    &:hover &-icon {
+      transform: rotate(15deg) scale(1.1);
+      box-shadow: $shadow-gold, $shadow-glow;
+    }
 
     span {
-      color: $accent;
+      @include text-gradient($gradient-gold);
+      font-weight: 800;
     }
   }
 
+  // Navigation links
   &__nav {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 8px;
 
     a {
-      font-size: 0.9rem;
+      position: relative;
+      font-size: 0.85rem;
       font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: $primary-light;
-      transition: color 0.2s;
+      letter-spacing: 1.5px;
+      color: $dark-gray;
+      padding: 8px 16px;
+      border-radius: $border-radius-xl;
+      transition: $transition;
 
-      &:hover, &.active {
-        color: $accent;
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        background: $gradient-gold;
+        border-radius: 1px;
+        transition: width 0.3s $ease-smooth;
+      }
+
+      &:hover {
+        color: $gold-dark;
+
+        &::after {
+          width: 60%;
+        }
+      }
+
+      &.active {
+        color: $gold-dark;
+        background: rgba($gold, 0.08);
+
+        &::after {
+          width: 60%;
+        }
       }
     }
 
@@ -59,52 +123,103 @@
   &__actions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+  }
+
+  &__user {
+    font-size: 0.82rem;
+    color: $medium-gray;
+    font-weight: 500;
+    padding: 6px 14px;
+    background: rgba($gold, 0.08);
+    border-radius: $border-radius-xl;
+
+    strong {
+      color: $gold-dark;
+    }
   }
 
   &__btn {
-    @include btn;
-    padding: 8px 20px;
-    font-size: 12px;
+    @include btn-primary;
+    padding: 10px 24px;
+    font-size: 11px;
+  }
+
+  &__btn--ghost {
+    @include btn-secondary;
+    padding: 10px 24px;
+    font-size: 11px;
   }
 
   &__menu-toggle {
     display: none;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    @include flex-center;
+    border-radius: 50%;
     cursor: pointer;
-    color: $primary;
+    color: $charcoal;
+    font-size: 1.3rem;
+    transition: $transition;
+
+    &:hover {
+      background: rgba($gold, 0.1);
+      color: $gold-dark;
+    }
 
     @include tablet {
-      display: block;
+      display: flex;
     }
   }
 }
 
-// Mobile nav
+// Mobile navigation drawer
 .mobile-nav {
   position: fixed;
   top: $header-height;
   left: 0;
   right: 0;
-  background: $white;
-  box-shadow: $shadow-lg;
-  padding: 24px;
+  bottom: 0;
+  background: rgba($white, 0.98);
+  backdrop-filter: blur(20px);
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   z-index: 999;
+  animation: fadeIn 0.3s ease;
 
   a {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
-    color: $primary;
-    padding: 8px 0;
-    border-bottom: 1px solid $light-gray;
+    color: $charcoal;
+    padding: 16px 20px;
+    border-radius: $border-radius;
+    transition: $transition;
+    position: relative;
+    overflow: hidden;
 
-    &:hover {
-      color: $accent;
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: $gradient-gold;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    &:hover, &.active {
+      background: rgba($gold, 0.08);
+      color: $gold-dark;
+
+      &::before {
+        opacity: 1;
+      }
     }
   }
 }

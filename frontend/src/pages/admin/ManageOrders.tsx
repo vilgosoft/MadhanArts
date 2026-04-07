@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { orderApi } from '../../services/api';
 import type { Order, OrderStatus } from '../../types';
 import Loader from '../../components/common/Loader';
+import '../../styles/components/_admin.scss';
 
 const STATUS_OPTIONS: OrderStatus[] = ['received', 'in_progress', 'completed', 'delivered', 'cancelled'];
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -39,7 +40,7 @@ export default function ManageOrders() {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #e8e4df', fontSize: '0.85rem' }}
+          style={{ padding: '10px 16px', borderRadius: '24px', border: '2px solid #e8e2d8', fontSize: '0.85rem', background: '#fff' }}
         >
           <option value="">All Statuses</option>
           {STATUS_OPTIONS.map((s) => (
@@ -72,13 +73,15 @@ export default function ManageOrders() {
                   <td>{order.user_name}</td>
                   <td>{order.category_name}</td>
                   <td>{order.size_label}</td>
-                  <td>₹{parseFloat(order.amount).toLocaleString('en-IN')}</td>
+                  <td style={{ fontWeight: 600, color: '#b08930' }}>
+                    &#8377;{parseFloat(order.amount).toLocaleString('en-IN')}
+                  </td>
                   <td>
                     <a
                       href={`${API_URL}/api/orders/${order.id}/photo`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: '#c9a96e', fontSize: '0.85rem' }}
+                      style={{ color: '#d4a853', fontWeight: 600, fontSize: '0.82rem' }}
                     >
                       Download
                     </a>
@@ -88,10 +91,12 @@ export default function ManageOrders() {
                       value={order.order_status}
                       onChange={(e) => handleStatusChange(order.id, e.target.value)}
                       style={{
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        border: '1px solid #e8e4df',
-                        fontSize: '0.8rem',
+                        padding: '6px 12px',
+                        borderRadius: '20px',
+                        border: '2px solid #e8e2d8',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        background: '#fff',
                       }}
                     >
                       {STATUS_OPTIONS.map((s) => (
@@ -99,7 +104,7 @@ export default function ManageOrders() {
                       ))}
                     </select>
                   </td>
-                  <td style={{ fontSize: '0.85rem', color: '#999' }}>
+                  <td style={{ fontSize: '0.82rem', color: '#8a8490' }}>
                     {new Date(order.created_at).toLocaleDateString('en-IN')}
                   </td>
                 </tr>
@@ -107,21 +112,13 @@ export default function ManageOrders() {
             </tbody>
           </table>
 
-          {/* Pagination */}
           {pages > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '24px' }}>
+            <div className="pagination">
               {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
                 <button
                   key={p}
+                  className={`pagination__btn ${p === page ? 'pagination__btn--active' : ''}`}
                   onClick={() => { setPage(p); load(p); }}
-                  style={{
-                    padding: '6px 14px',
-                    borderRadius: '4px',
-                    border: p === page ? '2px solid #c9a96e' : '1px solid #e8e4df',
-                    background: p === page ? 'rgba(201,169,110,0.1)' : '#fff',
-                    cursor: 'pointer',
-                    fontWeight: p === page ? 600 : 400,
-                  }}
                 >
                   {p}
                 </button>

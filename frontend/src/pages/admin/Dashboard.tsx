@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { orderApi, categoryApi } from '../../services/api';
+import '../../styles/components/_admin.scss';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({ orders: 0, categories: 0 });
@@ -16,36 +17,36 @@ export default function Dashboard() {
     }).catch(() => {});
   }, []);
 
-  const cards = [
-    { label: 'Total Orders', value: stats.orders, color: '#c9a96e' },
-    { label: 'Categories', value: stats.categories, color: '#27ae60' },
-  ];
-
   return (
     <div>
-      <h1 style={{ fontSize: '1.6rem', fontFamily: "'Playfair Display', serif", marginBottom: '32px' }}>
-        Dashboard
-      </h1>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '24px' }}>
-        {cards.map((card) => (
-          <div
-            key={card.label}
-            style={{
-              background: '#fff',
-              borderRadius: '8px',
-              padding: '28px',
-              boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
-              borderLeft: `4px solid ${card.color}`,
-            }}
-          >
-            <p style={{ color: '#999', fontSize: '0.85rem', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              {card.label}
-            </p>
-            <p style={{ fontSize: '2rem', fontWeight: 700, color: '#1a1a1a' }}>
-              {card.value}
-            </p>
-          </div>
-        ))}
+      <div className="admin-page-header">
+        <h1>Dashboard</h1>
+      </div>
+
+      <div className="dashboard-stats">
+        <div className="stat-card stat-card--gold">
+          <div className="stat-card__icon">&#127912;</div>
+          <div className="stat-card__label">Total Orders</div>
+          <div className="stat-card__value">{stats.orders}</div>
+        </div>
+
+        <div className="stat-card stat-card--teal">
+          <div className="stat-card__icon">&#128396;</div>
+          <div className="stat-card__label">Categories</div>
+          <div className="stat-card__value">{stats.categories}</div>
+        </div>
+
+        <div className="stat-card stat-card--rose">
+          <div className="stat-card__icon">&#128247;</div>
+          <div className="stat-card__label">Gallery Items</div>
+          <div className="stat-card__value">-</div>
+        </div>
+
+        <div className="stat-card stat-card--lavender">
+          <div className="stat-card__icon">&#128176;</div>
+          <div className="stat-card__label">Revenue</div>
+          <div className="stat-card__value">-</div>
+        </div>
       </div>
     </div>
   );

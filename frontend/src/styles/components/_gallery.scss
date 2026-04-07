@@ -1,66 +1,132 @@
+@use 'sass:color';
 @use '../variables' as *;
 @use '../mixins' as *;
 
+// ──────────────────────────────────────
+// Gallery Section
+// ──────────────────────────────────────
 .gallery-section {
-  padding: 80px 0;
+  padding: 100px 0;
+  background: $cream;
+  position: relative;
+
+  // Subtle texture overlay
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 50%, rgba($gold, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba($lavender, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
 }
 
-// Category filter tabs
+// ──────────────────────────────────────
+// Category Filter — Pill Tabs
+// ──────────────────────────────────────
 .category-filter {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 40px;
+  gap: 10px;
+  margin-bottom: 48px;
   flex-wrap: wrap;
+  animation: fadeInUp 0.5s $ease-smooth forwards;
 
   &__tab {
-    padding: 8px 24px;
-    border: 2px solid $light-gray;
-    border-radius: 30px;
-    background: transparent;
-    font-family: $font-secondary;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: $primary-light;
+    padding: 10px 28px;
+    border: 2px solid rgba($charcoal, 0.1);
+    border-radius: $border-radius-xl;
+    background: rgba($white, 0.6);
+    backdrop-filter: blur(8px);
+    font-family: $font-body;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: $dark-gray;
     cursor: pointer;
     transition: $transition;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: $gradient-gold;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
     &:hover {
-      border-color: $accent;
-      color: $accent;
+      border-color: $gold;
+      color: $gold-dark;
+      transform: translateY(-2px);
+      box-shadow: $shadow-sm;
     }
 
     &--active {
-      background: $accent;
-      border-color: $accent;
-      color: $white;
+      background: $gradient-gold;
+      border-color: $gold;
+      color: $charcoal;
+      font-weight: 700;
+      box-shadow: $shadow-gold;
+      transform: translateY(-2px);
+
+      &:hover {
+        color: $charcoal;
+      }
     }
   }
 }
 
-// Gallery grid
+// ──────────────────────────────────────
+// Gallery Grid — Masonry feel
+// ──────────────────────────────────────
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 28px;
+
+  @include tablet {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
 
   @include mobile {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
   }
 }
 
+// ──────────────────────────────────────
+// Gallery Card — Artistic hover
+// ──────────────────────────────────────
 .gallery-card {
   @include card;
   cursor: pointer;
-  transition: $transition;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  position: relative;
+  opacity: 0;
+  animation: fadeInScale 0.5s $ease-smooth forwards;
+  @include stagger-children(20, 0.06s);
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: $shadow-lg;
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: $shadow-xl;
+
+    .gallery-card__image {
+      transform: scale(1.1);
+      filter: brightness(0.8);
+    }
 
     .gallery-card__overlay {
       opacity: 1;
+    }
+
+    .gallery-card__overlay-content {
+      transform: translateY(0);
     }
   }
 
@@ -68,47 +134,111 @@
     position: relative;
     aspect-ratio: 3 / 4;
     overflow: hidden;
+    background: $light-gray;
   }
 
   &__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    transition: transform 0.7s $ease-smooth, filter 0.5s ease;
   }
 
-  &:hover &__image {
-    transform: scale(1.05);
-  }
-
+  // Artistic gradient overlay
   &__overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    @include flex-center;
+    background: linear-gradient(
+      180deg,
+      transparent 20%,
+      rgba($ink, 0.3) 60%,
+      rgba($ink, 0.85) 100%
+    );
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 28px;
+  }
+
+  &__overlay-content {
+    transform: translateY(20px);
+    transition: transform 0.4s $ease-smooth;
+    width: 100%;
+  }
+
+  &__overlay-title {
+    font-family: $font-display;
+    font-size: 1.1rem;
+    color: $white;
+    margin-bottom: 8px;
+  }
+
+  &__overlay-category {
+    font-family: $font-accent;
+    font-size: 1rem;
+    color: $gold-light;
+    margin-bottom: 16px;
   }
 
   &__overlay-btn {
-    @include btn;
+    @include btn-primary;
     padding: 10px 24px;
-    font-size: 12px;
+    font-size: 11px;
+    width: 100%;
   }
 
+  // Bottom info bar
   &__info {
-    padding: 16px;
+    padding: 16px 20px;
+    background: $white;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20px;
+      right: 20px;
+      height: 1px;
+      background: $gradient-gold;
+      opacity: 0.3;
+    }
 
     h3 {
-      font-family: $font-secondary;
-      font-size: 0.95rem;
-      font-weight: 500;
+      font-family: $font-body;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: $charcoal;
       margin-bottom: 4px;
     }
 
     span {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: $medium-gray;
+      font-weight: 500;
     }
+  }
+}
+
+// ──────────────────────────────────────
+// Empty state
+// ──────────────────────────────────────
+.gallery-empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: $medium-gray;
+
+  &__icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.4;
+    animation: gentleFloat 3s ease-in-out infinite;
+  }
+
+  p {
+    font-size: 1rem;
+    max-width: 300px;
+    margin: 0 auto;
   }
 }
