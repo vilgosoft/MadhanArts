@@ -1,0 +1,29 @@
+# Dependencies
+frontend/node_modules/
+backend/vendor/
+
+# Uploads
+backend/uploads/gallery/*
+backend/uploads/references/*
+!backend/uploads/gallery/.gitkeep
+!backend/uploads/references/.gitkeep
+
+# Environment
+.env
+backend/config/database.local.php
+
+# Build output
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
