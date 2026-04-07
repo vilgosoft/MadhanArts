@@ -1,0 +1,269 @@
+@use 'sass:color';
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.order-page {
+  padding: calc($header-height + 40px) 0 80px;
+  min-height: 100vh;
+}
+
+// Step indicator
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 48px;
+
+  &__step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      @include flex-center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 2px solid $light-gray;
+      color: $medium-gray;
+      transition: $transition;
+    }
+
+    &-label {
+      font-size: 0.85rem;
+      color: $medium-gray;
+
+      @include mobile {
+        display: none;
+      }
+    }
+
+    &--active &-number {
+      background: $accent;
+      border-color: $accent;
+      color: $white;
+    }
+
+    &--active &-label {
+      color: $dark-gray;
+      font-weight: 500;
+    }
+
+    &--done &-number {
+      background: $success;
+      border-color: $success;
+      color: $white;
+    }
+  }
+
+  &__connector {
+    width: 40px;
+    height: 2px;
+    background: $light-gray;
+
+    &--done {
+      background: $success;
+    }
+  }
+}
+
+// Wizard card
+.wizard-card {
+  @include card;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px;
+
+  @include mobile {
+    padding: 24px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: $medium-gray;
+    margin-bottom: 32px;
+  }
+}
+
+// Photo upload
+.photo-upload {
+  &__dropzone {
+    border: 2px dashed $light-gray;
+    border-radius: $border-radius;
+    padding: 48px;
+    text-align: center;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover, &--active {
+      border-color: $accent;
+      background: rgba($accent, 0.03);
+    }
+
+    svg {
+      width: 48px;
+      height: 48px;
+      color: $medium-gray;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-family: $font-secondary;
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    span {
+      font-size: 0.85rem;
+      color: $medium-gray;
+    }
+  }
+
+  &__preview {
+    margin-top: 24px;
+    position: relative;
+    display: inline-block;
+
+    img {
+      max-height: 300px;
+      border-radius: $border-radius;
+      box-shadow: $shadow;
+    }
+
+    button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: $danger;
+      color: $white;
+      border: none;
+      cursor: pointer;
+      @include flex-center;
+      font-size: 14px;
+    }
+  }
+}
+
+// Size selector
+.size-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+
+  &__option {
+    @include card;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: $transition;
+
+    &:hover {
+      border-color: $accent;
+    }
+
+    &--selected {
+      border-color: $accent;
+      background: rgba($accent, 0.05);
+    }
+
+    h4 {
+      font-family: $font-secondary;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    span {
+      font-size: 0.8rem;
+      color: $medium-gray;
+    }
+
+    .price {
+      display: block;
+      margin-top: 12px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: $accent-dark;
+    }
+  }
+}
+
+// Price summary
+.price-summary {
+  text-align: center;
+
+  &__amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $accent-dark;
+    font-family: $font-primary;
+    margin-bottom: 8px;
+  }
+
+  &__details {
+    margin: 24px 0;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      td {
+        padding: 12px 0;
+        border-bottom: 1px solid $light-gray;
+
+        &:first-child {
+          text-align: left;
+          color: $medium-gray;
+        }
+
+        &:last-child {
+          text-align: right;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  &__photo {
+    margin: 24px auto;
+    max-width: 200px;
+
+    img {
+      border-radius: $border-radius;
+      box-shadow: $shadow;
+    }
+  }
+}
+
+// Wizard navigation
+.wizard-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid $light-gray;
+
+  &__back {
+    @include btn($light-gray, $dark-gray);
+
+    &:hover {
+      background: color.adjust($light-gray, $lightness: -5%);
+    }
+  }
+
+  &__next {
+    @include btn;
+  }
+}

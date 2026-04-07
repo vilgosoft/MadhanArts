@@ -1,0 +1,226 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  padding-top: $header-height;
+}
+
+.admin-sidebar {
+  width: 240px;
+  background: $primary;
+  color: $white;
+  padding: 32px 0;
+  position: fixed;
+  top: $header-height;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+
+  &__title {
+    font-family: $font-primary;
+    font-size: 1rem;
+    padding: 0 24px;
+    margin-bottom: 24px;
+    color: $accent;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+
+    a {
+      padding: 12px 24px;
+      font-size: 0.9rem;
+      color: rgba($white, 0.7);
+      transition: $transition;
+
+      &:hover, &.active {
+        background: rgba($white, 0.1);
+        color: $white;
+        border-left: 3px solid $accent;
+      }
+    }
+  }
+
+  @include tablet {
+    display: none;
+  }
+}
+
+.admin-content {
+  flex: 1;
+  margin-left: 240px;
+  padding: 32px;
+
+  @include tablet {
+    margin-left: 0;
+  }
+}
+
+.admin-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  &__btn {
+    @include btn;
+    padding: 10px 24px;
+    font-size: 12px;
+  }
+}
+
+// Admin table
+.admin-table {
+  width: 100%;
+  @include card;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 14px 20px;
+    text-align: left;
+    border-bottom: 1px solid $light-gray;
+  }
+
+  th {
+    background: $off-white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: $medium-gray;
+  }
+
+  td {
+    font-size: 0.9rem;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+
+    button {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: $transition;
+
+      &.edit {
+        background: rgba($accent, 0.1);
+        color: $accent-dark;
+
+        &:hover { background: rgba($accent, 0.2); }
+      }
+
+      &.delete {
+        background: rgba($danger, 0.1);
+        color: $danger;
+
+        &:hover { background: rgba($danger, 0.2); }
+      }
+    }
+  }
+}
+
+// Status badge
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &--received    { background: rgba($warning, 0.15); color: $warning; }
+  &--in_progress { background: rgba(#3498db, 0.15); color: #3498db; }
+  &--completed   { background: rgba($success, 0.15); color: $success; }
+  &--delivered   { background: rgba($accent, 0.15);  color: $accent-dark; }
+  &--cancelled   { background: rgba($danger, 0.15);  color: $danger; }
+  &--paid        { background: rgba($success, 0.15); color: $success; }
+  &--pending     { background: rgba($warning, 0.15); color: $warning; }
+  &--failed      { background: rgba($danger, 0.15);  color: $danger; }
+}
+
+// Modal
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 2000;
+}
+
+.modal {
+  @include card;
+  padding: 32px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 24px;
+  }
+
+  &__field {
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: $primary-light;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid $light-gray;
+      border-radius: $border-radius;
+      font-family: $font-secondary;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: $accent;
+      }
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+
+    .btn-cancel {
+      @include btn($light-gray, $dark-gray);
+      padding: 10px 20px;
+    }
+
+    .btn-save {
+      @include btn;
+      padding: 10px 20px;
+    }
+  }
+}

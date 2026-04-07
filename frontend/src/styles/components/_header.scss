@@ -1,0 +1,110 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $header-height;
+  background: $white;
+  box-shadow: $shadow;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+
+  &__inner {
+    @include container;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__logo {
+    font-family: $font-primary;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: $black;
+    letter-spacing: 1px;
+
+    span {
+      color: $accent;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+
+    a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: $primary-light;
+      transition: color 0.2s;
+
+      &:hover, &.active {
+        color: $accent;
+      }
+    }
+
+    @include tablet {
+      display: none;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__btn {
+    @include btn;
+    padding: 8px 20px;
+    font-size: 12px;
+  }
+
+  &__menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: $primary;
+
+    @include tablet {
+      display: block;
+    }
+  }
+}
+
+// Mobile nav
+.mobile-nav {
+  position: fixed;
+  top: $header-height;
+  left: 0;
+  right: 0;
+  background: $white;
+  box-shadow: $shadow-lg;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 999;
+
+  a {
+    font-size: 1rem;
+    font-weight: 500;
+    color: $primary;
+    padding: 8px 0;
+    border-bottom: 1px solid $light-gray;
+
+    &:hover {
+      color: $accent;
+    }
+  }
+}

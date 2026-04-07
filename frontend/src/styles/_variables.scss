@@ -1,0 +1,40 @@
+// ──────────────────────────────────────
+// Colors
+// ──────────────────────────────────────
+$primary:       #2c2c2c;
+$primary-light: #4a4a4a;
+$accent:        #c9a96e;
+$accent-dark:   #b08d4f;
+$white:         #ffffff;
+$off-white:     #f8f6f3;
+$light-gray:    #e8e4df;
+$medium-gray:   #999;
+$dark-gray:     #333;
+$black:         #1a1a1a;
+$danger:        #e74c3c;
+$success:       #27ae60;
+$warning:       #f39c12;
+
+// ──────────────────────────────────────
+// Typography
+// ──────────────────────────────────────
+$font-primary:   'Playfair Display', Georgia, serif;
+$font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+$font-size-base: 16px;
+
+// ──────────────────────────────────────
+// Layout
+// ──────────────────────────────────────
+$max-width:      1200px;
+$header-height:  72px;
+$border-radius:  8px;
+$shadow:         0 2px 12px rgba(0, 0, 0, 0.08);
+$shadow-lg:      0 8px 32px rgba(0, 0, 0, 0.12);
+$transition:     all 0.3s ease;
+
+// ──────────────────────────────────────
+// Breakpoints
+// ──────────────────────────────────────
+$mobile:  576px;
+$tablet:  768px;
+$desktop: 1024px;
