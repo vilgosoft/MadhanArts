@@ -1,0 +1,39 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.loader {
+  @include flex-center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 100px 0;
+  animation: fadeIn 0.3s ease;
+
+  &__spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba($gold, 0.15);
+    border-top-color: $gold;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    position: relative;
+  }
+
+  &__brush {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: $gold;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba($gold, 0.5);
+  }
+
+  &__text {
+    font-size: 0.88rem;
+    color: $medium-gray;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+}

@@ -1,15 +1,22 @@
+@use 'sass:color';
 @use '../variables' as *;
 @use '../mixins' as *;
 
+// ──────────────────────────────────────
+// Admin Layout
+// ──────────────────────────────────────
 .admin-layout {
   display: flex;
   min-height: 100vh;
   padding-top: $header-height;
 }
 
+// ──────────────────────────────────────
+// Sidebar — Dark artistic sidebar
+// ──────────────────────────────────────
 .admin-sidebar {
-  width: 240px;
-  background: $primary;
+  width: 260px;
+  background: $gradient-dark;
   color: $white;
   padding: 32px 0;
   position: fixed;
@@ -17,31 +24,70 @@
   bottom: 0;
   left: 0;
   overflow-y: auto;
+  z-index: 100;
+  border-right: 1px solid rgba($gold, 0.1);
+  @include custom-scrollbar;
 
   &__title {
-    font-family: $font-primary;
-    font-size: 1rem;
-    padding: 0 24px;
-    margin-bottom: 24px;
-    color: $accent;
+    font-family: $font-display;
+    font-size: 0.85rem;
+    padding: 0 28px;
+    margin-bottom: 28px;
+    @include text-gradient($gradient-gold);
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
+    font-weight: 700;
   }
 
   &__nav {
     display: flex;
     flex-direction: column;
+    gap: 2px;
+    padding: 0 12px;
 
     a {
-      padding: 12px 24px;
-      font-size: 0.9rem;
-      color: rgba($white, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: rgba($white, 0.55);
+      border-radius: $border-radius-sm;
       transition: $transition;
 
-      &:hover, &.active {
-        background: rgba($white, 0.1);
-        color: $white;
-        border-left: 3px solid $accent;
+      &::before {
+        content: '';
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: 0.5;
+        transition: $transition;
+      }
+
+      &:hover {
+        background: rgba($white, 0.06);
+        color: rgba($white, 0.9);
+
+        &::before {
+          opacity: 1;
+          background: $gold;
+        }
+      }
+
+      &.active {
+        background: rgba($gold, 0.1);
+        color: $gold-light;
+        font-weight: 600;
+
+        &::before {
+          width: 6px;
+          height: 6px;
+          background: $gold;
+          opacity: 1;
+          box-shadow: 0 0 8px rgba($gold, 0.5);
+        }
       }
     }
   }
@@ -51,56 +97,168 @@
   }
 }
 
+// ──────────────────────────────────────
+// Admin Content Area
+// ──────────────────────────────────────
 .admin-content {
   flex: 1;
-  margin-left: 240px;
-  padding: 32px;
+  margin-left: 260px;
+  padding: 36px;
+  background: $cream;
+  min-height: calc(100vh - $header-height);
 
   @include tablet {
     margin-left: 0;
+    padding: 24px;
   }
 }
 
+// ──────────────────────────────────────
+// Page Header
+// ──────────────────────────────────────
 .admin-page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
+  animation: fadeInUp 0.4s $ease-smooth;
 
   h1 {
     font-size: 1.6rem;
+    color: $charcoal;
   }
 
   &__btn {
-    @include btn;
-    padding: 10px 24px;
+    @include btn-primary;
+    padding: 12px 28px;
     font-size: 12px;
   }
 }
 
-// Admin table
+// ──────────────────────────────────────
+// Dashboard stat cards
+// ──────────────────────────────────────
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  @include card;
+  border-radius: $border-radius;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.5s $ease-smooth forwards;
+  opacity: 0;
+  @include stagger-children(6, 0.1s);
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: $border-radius;
+    @include flex-center;
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: $medium-gray;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  &__value {
+    font-family: $font-display;
+    font-size: 2rem;
+    font-weight: 700;
+    color: $charcoal;
+  }
+
+  &__link {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $gold-dark;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: $gold;
+    }
+  }
+
+  // Color variants
+  &--gold {
+    border-top: 3px solid $gold;
+    .stat-card__icon { background: rgba($gold, 0.1); }
+  }
+  &--teal {
+    border-top: 3px solid $teal;
+    .stat-card__icon { background: rgba($teal, 0.1); }
+  }
+  &--rose {
+    border-top: 3px solid $rose;
+    .stat-card__icon { background: rgba($rose, 0.1); }
+  }
+  &--lavender {
+    border-top: 3px solid $lavender;
+    .stat-card__icon { background: rgba($lavender, 0.1); }
+  }
+}
+
+// ──────────────────────────────────────
+// Admin Table — Modern design
+// ──────────────────────────────────────
 .admin-table {
   width: 100%;
   @include card;
+  border-radius: $border-radius;
   border-collapse: collapse;
+  animation: fadeIn 0.4s ease;
 
   th, td {
-    padding: 14px 20px;
+    padding: 16px 20px;
     text-align: left;
-    border-bottom: 1px solid $light-gray;
   }
 
-  th {
-    background: $off-white;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: $medium-gray;
+  thead {
+    th {
+      background: rgba($charcoal, 0.03);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: $medium-gray;
+      border-bottom: 2px solid $light-gray;
+      white-space: nowrap;
+    }
   }
 
-  td {
-    font-size: 0.9rem;
+  tbody {
+    tr {
+      border-bottom: 1px solid rgba($light-gray, 0.5);
+      transition: background 0.2s ease;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: rgba($gold, 0.02);
+      }
+    }
+
+    td {
+      font-size: 0.88rem;
+      color: $dark-gray;
+    }
   }
 
   &__actions {
@@ -108,71 +266,102 @@
     gap: 8px;
 
     button {
-      padding: 6px 14px;
+      padding: 6px 16px;
       border: none;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 500;
+      border-radius: $border-radius-xl;
+      font-size: 0.78rem;
+      font-weight: 600;
       cursor: pointer;
       transition: $transition;
 
       &.edit {
-        background: rgba($accent, 0.1);
-        color: $accent-dark;
+        background: rgba($gold, 0.1);
+        color: $gold-dark;
 
-        &:hover { background: rgba($accent, 0.2); }
+        &:hover {
+          background: rgba($gold, 0.2);
+          transform: translateY(-1px);
+        }
       }
 
       &.delete {
-        background: rgba($danger, 0.1);
+        background: rgba($danger, 0.08);
         color: $danger;
 
-        &:hover { background: rgba($danger, 0.2); }
+        &:hover {
+          background: rgba($danger, 0.15);
+          transform: translateY(-1px);
+        }
       }
     }
   }
 }
 
-// Status badge
+// ──────────────────────────────────────
+// Status Badges — Colorful pills
+// ──────────────────────────────────────
 .status-badge {
   display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: $border-radius-xl;
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
-  &--received    { background: rgba($warning, 0.15); color: $warning; }
-  &--in_progress { background: rgba(#3498db, 0.15); color: #3498db; }
-  &--completed   { background: rgba($success, 0.15); color: $success; }
-  &--delivered   { background: rgba($accent, 0.15);  color: $accent-dark; }
-  &--cancelled   { background: rgba($danger, 0.15);  color: $danger; }
-  &--paid        { background: rgba($success, 0.15); color: $success; }
-  &--pending     { background: rgba($warning, 0.15); color: $warning; }
-  &--failed      { background: rgba($danger, 0.15);  color: $danger; }
+  &--received    { background: rgba($amber, 0.12); color: $amber; }
+  &--in_progress { background: rgba($sky, 0.12); color: $sky; }
+  &--completed   { background: rgba($success, 0.12); color: $success; }
+  &--delivered   { background: rgba($gold, 0.12); color: $gold-dark; }
+  &--cancelled   { background: rgba($danger, 0.12); color: $danger; }
+  &--paid        { background: rgba($success, 0.12); color: $success; }
+  &--pending     { background: rgba($amber, 0.12); color: $amber; }
+  &--failed      { background: rgba($danger, 0.12); color: $danger; }
+  &--active      { background: rgba($success, 0.12); color: $success; }
+  &--inactive    { background: rgba($medium-gray, 0.12); color: $medium-gray; }
 }
 
-// Modal
+// ──────────────────────────────────────
+// Modal — Glass design
+// ──────────────────────────────────────
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba($ink, 0.6);
+  backdrop-filter: blur(6px);
   @include flex-center;
   z-index: 2000;
+  animation: fadeIn 0.2s ease;
 }
 
 .modal {
   @include card;
-  padding: 32px;
+  border-radius: $border-radius-lg;
+  padding: 36px;
   width: 90%;
-  max-width: 500px;
-  max-height: 80vh;
+  max-width: 520px;
+  max-height: 85vh;
   overflow-y: auto;
+  animation: fadeInScale 0.3s $ease-bounce;
+  position: relative;
+  @include custom-scrollbar;
+
+  // Gold accent top
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: $gradient-gold;
+    border-radius: $border-radius-lg $border-radius-lg 0 0;
+  }
 
   h2 {
     font-size: 1.3rem;
     margin-bottom: 24px;
+    color: $charcoal;
   }
 
   &__field {
@@ -180,29 +369,38 @@
 
     label {
       display: block;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 6px;
-      color: $primary-light;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: $dark-gray;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     input, select, textarea {
       width: 100%;
-      padding: 10px 14px;
-      border: 1px solid $light-gray;
-      border-radius: $border-radius;
-      font-family: $font-secondary;
+      padding: 12px 16px;
+      border: 2px solid $light-gray;
+      border-radius: $border-radius-sm;
+      font-family: $font-body;
       font-size: 0.9rem;
-      transition: border-color 0.2s;
+      transition: $transition-fast;
+      background: $white;
+      color: $charcoal;
 
       &:focus {
         outline: none;
-        border-color: $accent;
+        border-color: $gold;
+        box-shadow: 0 0 0 3px rgba($gold, 0.1);
+      }
+
+      &::placeholder {
+        color: rgba($medium-gray, 0.6);
       }
     }
 
     textarea {
-      min-height: 80px;
+      min-height: 100px;
       resize: vertical;
     }
   }
@@ -211,16 +409,130 @@
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 24px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid $light-gray;
 
     .btn-cancel {
-      @include btn($light-gray, $dark-gray);
-      padding: 10px 20px;
+      @include btn-ghost;
+      color: $dark-gray;
+      border-color: $light-gray;
+      background: rgba($charcoal, 0.04);
+
+      &:hover {
+        background: rgba($charcoal, 0.08);
+      }
     }
 
     .btn-save {
-      @include btn;
-      padding: 10px 20px;
+      @include btn-primary;
+      padding: 12px 28px;
+    }
+  }
+}
+
+// ──────────────────────────────────────
+// Gallery admin grid
+// ──────────────────────────────────────
+.admin-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.admin-gallery-card {
+  @include card;
+  border-radius: $border-radius;
+  overflow: hidden;
+  animation: fadeInScale 0.4s $ease-smooth forwards;
+  opacity: 0;
+  @include stagger-children(20, 0.04s);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+
+    .admin-gallery-card__image {
+      transform: scale(1.05);
+    }
+  }
+
+  &__image-wrapper {
+    height: 200px;
+    overflow: hidden;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  &__info {
+    padding: 14px;
+
+    &-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: $charcoal;
+      margin-bottom: 4px;
+    }
+
+    &-category {
+      font-size: 0.75rem;
+      color: $medium-gray;
+    }
+  }
+
+  &__delete {
+    margin: 0 14px 14px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: $border-radius-xl;
+    background: rgba($danger, 0.08);
+    color: $danger;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    width: calc(100% - 28px);
+
+    &:hover {
+      background: rgba($danger, 0.15);
+    }
+  }
+}
+
+// ──────────────────────────────────────
+// Pagination
+// ──────────────────────────────────────
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 28px;
+
+  &__btn {
+    padding: 8px 16px;
+    border-radius: $border-radius-sm;
+    border: 2px solid $light-gray;
+    background: $white;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: $transition;
+
+    &:hover {
+      border-color: $gold;
+      color: $gold-dark;
+    }
+
+    &--active {
+      border-color: $gold;
+      background: rgba($gold, 0.08);
+      color: $gold-dark;
+      font-weight: 700;
     }
   }
 }

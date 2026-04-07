@@ -1,23 +1,21 @@
 @use 'sass:color';
 @use 'variables' as *;
 
+// ──────────────────────────────────────
+// Layout
+// ──────────────────────────────────────
 @mixin container {
   max-width: $max-width;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 32px;
+
+  @include mobile { padding: 0 20px; }
 }
 
-@mixin mobile {
-  @media (max-width: $mobile) { @content; }
-}
-
-@mixin tablet {
-  @media (max-width: $tablet) { @content; }
-}
-
-@mixin desktop {
-  @media (min-width: $desktop) { @content; }
-}
+@mixin mobile  { @media (max-width: $mobile)  { @content; } }
+@mixin tablet  { @media (max-width: $tablet)  { @content; } }
+@mixin desktop { @media (min-width: $desktop) { @content; } }
+@mixin wide    { @media (min-width: $wide)    { @content; } }
 
 @mixin flex-center {
   display: flex;
@@ -25,27 +23,85 @@
   justify-content: center;
 }
 
-@mixin btn($bg: $accent, $color: $white) {
+// ──────────────────────────────────────
+// Buttons — Artistic styles
+// ──────────────────────────────────────
+@mixin btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 28px;
-  background: $bg;
-  color: $color;
+  gap: 10px;
+  padding: 14px 32px;
+  background: $gradient-gold;
+  color: $charcoal;
   border: none;
-  border-radius: $border-radius;
-  font-family: $font-secondary;
+  border-radius: $border-radius-xl;
+  font-family: $font-body;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: $transition;
+  box-shadow: $shadow-gold;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-gold, $shadow-glow;
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+@mixin btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: transparent;
+  color: $gold;
+  border: 2px solid $gold;
+  border-radius: $border-radius-xl;
+  font-family: $font-body;
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
   transition: $transition;
 
   &:hover {
-    background: color.adjust($bg, $lightness: -8%);
-    transform: translateY(-1px);
+    background: $gold;
+    color: $charcoal;
+    transform: translateY(-2px);
+    box-shadow: $shadow-gold;
   }
 
   &:disabled {
@@ -55,9 +111,171 @@
   }
 }
 
+@mixin btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: rgba($white, 0.08);
+  color: $white;
+  border: 1px solid rgba($white, 0.15);
+  border-radius: $border-radius-xl;
+  font-family: $font-body;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: $transition;
+  backdrop-filter: blur(8px);
+
+  &:hover {
+    background: rgba($white, 0.15);
+    border-color: rgba($white, 0.3);
+    transform: translateY(-1px);
+  }
+}
+
+// ──────────────────────────────────────
+// Cards — Glass morphism + artistic
+// ──────────────────────────────────────
 @mixin card {
   background: $white;
   border-radius: $border-radius;
   box-shadow: $shadow;
   overflow: hidden;
+  transition: $transition;
+}
+
+@mixin card-hover {
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+@mixin glass-card {
+  background: rgba($white, 0.06);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba($white, 0.1);
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+}
+
+@mixin glass-card-light {
+  background: rgba($white, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba($white, 0.8);
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+}
+
+// ──────────────────────────────────────
+// Text Styles
+// ──────────────────────────────────────
+@mixin heading-xl {
+  font-family: $font-display;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: $white;
+}
+
+@mixin heading-lg {
+  font-family: $font-display;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+@mixin text-gradient($gradient) {
+  background: $gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@mixin accent-text {
+  font-family: $font-accent;
+  font-size: 1.3em;
+  color: $gold;
+}
+
+// ──────────────────────────────────────
+// Decorative Elements
+// ──────────────────────────────────────
+@mixin gold-underline {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: $gradient-gold;
+    border-radius: 2px;
+  }
+}
+
+@mixin artistic-border {
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: $gradient-artistic;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+// ──────────────────────────────────────
+// Animations
+// ──────────────────────────────────────
+@mixin fade-in-up($delay: 0s, $duration: 0.6s) {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp $duration $ease-smooth $delay forwards;
+}
+
+@mixin stagger-children($count: 10, $delay: 0.08s) {
+  @for $i from 1 through $count {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * $delay};
+    }
+  }
+}
+
+@mixin float-animation($duration: 3s) {
+  animation: gentleFloat $duration ease-in-out infinite;
+}
+
+// ──────────────────────────────────────
+// Scrollbar Styling
+// ──────────────────────────────────────
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba($gold, 0.3);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba($gold, 0.5);
+    }
+  }
 }

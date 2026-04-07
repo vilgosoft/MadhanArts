@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/api';
+import '../../styles/components/_auth.scss';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -28,36 +29,22 @@ export default function AdminLogin() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '120px auto', padding: '0 24px' }}>
-      <div className="wizard-card">
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-card__icon">&#128274;</div>
         <h2>Admin Login</h2>
-        <p>Sign in to access the admin panel</p>
+        <p className="auth-card__subtitle">Sign in to access the admin panel</p>
         <form onSubmit={handleSubmit}>
           <div className="modal__field">
             <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="admin@madhanarts.com" />
           </div>
           <div className="modal__field">
             <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Enter password" />
           </div>
-          {error && <p style={{ color: '#e74c3c', fontSize: '0.85rem', marginBottom: '16px' }}>{error}</p>}
-          <button
-            type="submit"
-            className="wizard-nav__next"
-            style={{ width: '100%' }}
-            disabled={loading}
-          >
+          {error && <div className="auth-card__error">{error}</div>}
+          <button type="submit" className="auth-card__submit" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>

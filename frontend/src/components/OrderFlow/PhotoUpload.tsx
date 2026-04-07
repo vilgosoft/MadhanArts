@@ -40,11 +40,15 @@ export default function PhotoUpload({ photo, onPhotoSelect }: Props) {
         onDragLeave={() => setDragActive(false)}
         onDrop={handleDrop}
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          <path d="M12 16V4m0 0l-4 4m4-4l4 4M4 18h16" />
-        </svg>
-        <h3>Upload your reference photo</h3>
-        <span>Drag & drop or click to browse (JPEG, PNG, WebP — max 10MB)</span>
+        <div className="photo-upload__dropzone-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+        </div>
+        <h3>Drop your reference photo here</h3>
+        <span>or click to browse &middot; JPEG, PNG, WebP &middot; Max 10MB</span>
       </div>
 
       <input
@@ -57,8 +61,8 @@ export default function PhotoUpload({ photo, onPhotoSelect }: Props) {
 
       {preview && (
         <div className="photo-upload__preview">
-          <img src={preview} alt="Reference preview" />
-          <button onClick={removePhoto}>&times;</button>
+          <img src={preview} alt="Your reference photo" />
+          <button className="photo-upload__preview-remove" onClick={removePhoto}>&times;</button>
         </div>
       )}
     </div>

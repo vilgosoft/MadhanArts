@@ -13,9 +13,9 @@ export default function GalleryGrid() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    categoryApi.list().then((res) => setCategories(res.data.data));
-    galleryApi.list().then((res) => {
-      setItems(res.data.data);
+    Promise.all([categoryApi.list(), galleryApi.list()]).then(([catRes, galRes]) => {
+      setCategories(catRes.data.data);
+      setItems(galRes.data.data);
       setLoading(false);
     });
   }, []);
@@ -27,11 +27,12 @@ export default function GalleryGrid() {
   if (loading) return <Loader />;
 
   return (
-    <section className="gallery-section">
+    <section className="gallery-section" id="gallery">
       <div className="container">
         <div className="section-title">
-          <h2>Our portfolio</h2>
-          <p>Each piece is handcrafted — use the filters to explore by style</p>
+          <span className="section-label">Our Portfolio</span>
+          <h2>Handcrafted Masterpieces</h2>
+          <p>Each artwork is crafted with passion, precision, and love for the art — use the filters to explore by style</p>
         </div>
 
         <CategoryFilter
@@ -47,9 +48,10 @@ export default function GalleryGrid() {
         </div>
 
         {filtered.length === 0 && (
-          <p style={{ textAlign: 'center', color: '#999', padding: '40px' }}>
-            No artworks found in this category.
-          </p>
+          <div className="gallery-empty">
+            <div className="gallery-empty__icon">&#127912;</div>
+            <p>No artworks found in this category yet. Check back soon!</p>
+          </div>
         )}
       </div>
     </section>

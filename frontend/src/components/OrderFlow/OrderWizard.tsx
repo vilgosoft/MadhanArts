@@ -28,23 +28,13 @@ export default function OrderWizard() {
 
   useEffect(() => {
     if (!categoryId) return;
-    // Try loading by ID first — the public API uses slug,
-    // but we navigate here with ID from gallery cards
     categoryApi.list().then((res) => {
       const cat = res.data.data.find((c) => c.id === Number(categoryId));
       if (cat) setCategory(cat);
     });
   }, [categoryId]);
 
-  if (!category) return <Loader text="Loading category..." />;
-
-  const handleSizeSelect = (sizeId: number, p: string, c: string) => {
-    setSelectedSizeId(sizeId);
-    setPrice(p);
-    setCurrency(c);
-    // Find size label from pricing data
-    // We'll get it from the SizeSelector component's rules
-  };
+  if (!category) return <Loader text="Loading..." />;
 
   const canNext = () => {
     if (step === 0) return !!photo;
@@ -81,20 +71,21 @@ export default function OrderWizard() {
     <div className="order-page">
       <div className="container">
         <div className="section-title">
-          <h2>Order: {category.name}</h2>
-          <p>Complete the steps below to place your commission order</p>
+          <span className="section-label">Commission Order</span>
+          <h2>{category.name}</h2>
+          <p>Complete the steps below to place your art commission</p>
         </div>
 
         {/* Step Indicator */}
         <div className="step-indicator">
           {STEPS.map((label, i) => (
-            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div key={label} style={{ display: 'contents' }}>
               {i > 0 && (
                 <div className={`step-indicator__connector ${i <= step ? 'step-indicator__connector--done' : ''}`} />
               )}
               <div className={`step-indicator__step ${i === step ? 'step-indicator__step--active' : ''} ${i < step ? 'step-indicator__step--done' : ''}`}>
-                <div className="step-indicator__step-number">
-                  {i < step ? '✓' : i + 1}
+                <div className="step-indicator__step-circle">
+                  {i < step ? '\u2713' : i + 1}
                 </div>
                 <span className="step-indicator__step-label">{label}</span>
               </div>
@@ -103,31 +94,27 @@ export default function OrderWizard() {
         </div>
 
         {/* Wizard Card */}
-        <div className="wizard-card">
+        <div className="wizard-card" key={step}>
           {step === 0 && (
             <>
               <h2>Upload Reference Photo</h2>
-              <p>Upload the photo you'd like us to create artwork from</p>
+              <p>Upload the photo you'd like us to transform into art</p>
               <PhotoUpload photo={photo} onPhotoSelect={setPhoto} />
             </>
           )}
 
           {step === 1 && (
             <>
-              <h2>Select Size</h2>
-              <p>Choose the canvas/paper size for your artwork</p>
+              <h2>Choose Your Size</h2>
+              <p>Select the canvas or paper size for your artwork</p>
               <SizeSelector
                 categoryId={category.id}
                 selectedSizeId={selectedSizeId}
-                onSelect={(sizeId, p, c) => {
-                  handleSizeSelect(sizeId, p, c);
-                  // Update size label from the element
-                  const el = document.querySelector(`.size-selector__option--selected h4`);
-                  if (el) setSizeLabel(el.textContent || '');
-                  setTimeout(() => {
-                    const selected = document.querySelector('.size-selector__option--selected h4');
-                    if (selected) setSizeLabel(selected.textContent || '');
-                  }, 0);
+                onSelect={(sizeId, p, c, label) => {
+                  setSelectedSizeId(sizeId);
+                  setPrice(p);
+                  setCurrency(c);
+                  setSizeLabel(label);
                 }}
               />
             </>
@@ -135,8 +122,8 @@ export default function OrderWizard() {
 
           {step === 2 && (
             <>
-              <h2>Review & Pay</h2>
-              <p>Confirm your order details and proceed to payment</p>
+              <h2>Review & Confirm</h2>
+              <p>Verify your order details before placing</p>
               <PriceSummary
                 categoryName={category.name}
                 sizeLabel={sizeLabel}
@@ -144,11 +131,7 @@ export default function OrderWizard() {
                 currency={currency}
                 photoPreview={photo ? URL.createObjectURL(photo) : null}
               />
-              {error && (
-                <p style={{ color: '#e74c3c', textAlign: 'center', marginTop: '16px' }}>
-                  {error}
-                </p>
-              )}
+              {error && <div className="wizard-error">{error}</div>}
             </>
           )}
 
@@ -156,7 +139,7 @@ export default function OrderWizard() {
           <div className="wizard-nav">
             {step > 0 ? (
               <button className="wizard-nav__back" onClick={() => setStep(step - 1)}>
-                Back
+                &#8592; Back
               </button>
             ) : (
               <div />
@@ -168,15 +151,15 @@ export default function OrderWizard() {
                 disabled={!canNext()}
                 onClick={() => setStep(step + 1)}
               >
-                Next
+                Continue &#8594;
               </button>
             ) : (
               <button
                 className="wizard-nav__next"
-                disabled={submitting}
+                disabled={submitting || !user}
                 onClick={handleSubmit}
               >
-                {submitting ? 'Placing Order...' : 'Place Order'}
+                {submitting ? 'Placing Order...' : !user ? 'Login to Order' : 'Place Order &#10003;'}
               </button>
             )}
           </div>

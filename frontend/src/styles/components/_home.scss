@@ -1,0 +1,567 @@
+@use 'sass:color';
+@use '../variables' as *;
+@use '../mixins' as *;
+
+// ──────────────────────────────────────
+// Hero Section
+// ──────────────────────────────────────
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background: $gradient-hero;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  // Floating paint splatters
+  &__blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    animation: gentleFloat 6s ease-in-out infinite;
+
+    &--1 {
+      width: 400px;
+      height: 400px;
+      top: -100px;
+      right: -100px;
+      background: rgba($gold, 0.08);
+      animation-delay: 0s;
+    }
+    &--2 {
+      width: 300px;
+      height: 300px;
+      bottom: -50px;
+      left: -80px;
+      background: rgba($lavender, 0.06);
+      animation-delay: 2s;
+    }
+    &--3 {
+      width: 200px;
+      height: 200px;
+      top: 40%;
+      right: 20%;
+      background: rgba($rose, 0.05);
+      animation-delay: 4s;
+    }
+  }
+
+  // Grid pattern overlay
+  &__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba($white, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba($white, 0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.5;
+  }
+
+  &__content {
+    @include container;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+
+    @include tablet {
+      grid-template-columns: 1fr;
+      gap: 48px;
+      text-align: center;
+      padding-top: 120px;
+      padding-bottom: 80px;
+    }
+  }
+
+  &__text {
+    animation: slideInLeft 0.8s $ease-smooth;
+  }
+
+  &__label {
+    display: inline-block;
+    font-family: $font-accent;
+    font-size: 1.4rem;
+    color: $gold-light;
+    margin-bottom: 16px;
+    animation: fadeInUp 0.6s $ease-smooth 0.2s forwards;
+    opacity: 0;
+  }
+
+  &__title {
+    @include heading-xl;
+    margin-bottom: 24px;
+    animation: fadeInUp 0.6s $ease-smooth 0.3s forwards;
+    opacity: 0;
+
+    .highlight {
+      @include text-gradient($gradient-gold);
+      display: inline;
+    }
+  }
+
+  &__subtitle {
+    font-size: 1.1rem;
+    color: rgba($white, 0.6);
+    line-height: 1.8;
+    max-width: 480px;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s $ease-smooth 0.4s forwards;
+    opacity: 0;
+
+    @include tablet {
+      margin: 0 auto 40px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 16px;
+    animation: fadeInUp 0.6s $ease-smooth 0.5s forwards;
+    opacity: 0;
+
+    @include tablet {
+      justify-content: center;
+    }
+
+    @include mobile {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__btn-primary {
+    @include btn-primary;
+    padding: 16px 40px;
+    font-size: 13px;
+  }
+
+  &__btn-secondary {
+    @include btn-secondary;
+    padding: 16px 40px;
+    font-size: 13px;
+    border-color: rgba($white, 0.3);
+    color: $white;
+
+    &:hover {
+      background: rgba($white, 0.1);
+      border-color: $white;
+    }
+  }
+
+  // Right side — floating art preview
+  &__visual {
+    position: relative;
+    animation: slideInRight 0.8s $ease-smooth;
+
+    @include tablet {
+      display: none;
+    }
+  }
+
+  &__floating-card {
+    @include glass-card;
+    padding: 16px;
+    position: absolute;
+    animation: gentleFloat 4s ease-in-out infinite;
+
+    &--1 {
+      top: 0;
+      right: 0;
+      width: 240px;
+      padding: 20px;
+      animation-delay: 0s;
+
+      &-label {
+        font-family: $font-accent;
+        color: $gold-light;
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+
+      &-value {
+        color: $white;
+        font-family: $font-display;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+    }
+
+    &--2 {
+      bottom: 40px;
+      left: 0;
+      animation-delay: 2s;
+    }
+
+    &--3 {
+      top: 50%;
+      right: -20px;
+      animation-delay: 1s;
+    }
+  }
+
+  // Scroll indicator
+  &__scroll {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: gentleFloat 2s ease-in-out infinite;
+
+    &-text {
+      font-size: 0.72rem;
+      color: rgba($white, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    &-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba($gold, 0.5), transparent);
+    }
+  }
+}
+
+// ──────────────────────────────────────
+// Features / Art Styles Section
+// ──────────────────────────────────────
+.features {
+  padding: 120px 0;
+  background: $white;
+  position: relative;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+
+    @include tablet {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.feature-card {
+  text-align: center;
+  padding: 40px 24px;
+  border-radius: $border-radius-lg;
+  border: 1px solid rgba($light-gray, 0.5);
+  transition: $transition;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeInUp 0.5s $ease-smooth forwards;
+  @include stagger-children(8, 0.1s);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-color, $gradient-gold);
+    transform: scaleX(0);
+    transition: transform 0.4s $ease-smooth;
+  }
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-lg;
+    border-color: transparent;
+
+    &::before {
+      transform: scaleX(1);
+    }
+
+    .feature-card__icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+  }
+
+  &__icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+    border-radius: $border-radius-lg;
+    @include flex-center;
+    font-size: 2rem;
+    transition: $transition;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $charcoal;
+    margin-bottom: 10px;
+  }
+
+  &__desc {
+    font-size: 0.88rem;
+    color: $medium-gray;
+    line-height: 1.7;
+  }
+
+  // Color variants
+  &--gold   { --accent-color: #{$gradient-gold};     .feature-card__icon { background: rgba($gold, 0.1); } }
+  &--rose   { --accent-color: #{$gradient-artistic};  .feature-card__icon { background: rgba($rose, 0.1); } }
+  &--teal   { --accent-color: linear-gradient(135deg, #{$teal}, #{$teal-light}); .feature-card__icon { background: rgba($teal, 0.1); } }
+  &--purple { --accent-color: linear-gradient(135deg, #{$lavender}, #{$lavender-light}); .feature-card__icon { background: rgba($lavender, 0.1); } }
+}
+
+// ──────────────────────────────────────
+// How It Works Section
+// ──────────────────────────────────────
+.process {
+  padding: 120px 0;
+  background: $cream;
+  position: relative;
+
+  &__steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    position: relative;
+
+    @include tablet {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
+
+    // Connecting line
+    &::before {
+      content: '';
+      position: absolute;
+      top: 36px;
+      left: 15%;
+      right: 15%;
+      height: 2px;
+      background: $gradient-gold;
+      opacity: 0.3;
+
+      @include tablet { display: none; }
+    }
+  }
+}
+
+.process-step {
+  text-align: center;
+  position: relative;
+  opacity: 0;
+  animation: fadeInUp 0.6s $ease-smooth forwards;
+  @include stagger-children(4, 0.15s);
+
+  &__number {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: $white;
+    border: 3px solid $gold;
+    @include flex-center;
+    margin: 0 auto 20px;
+    font-family: $font-display;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $gold-dark;
+    position: relative;
+    z-index: 1;
+    box-shadow: $shadow, $shadow-gold;
+    transition: $transition;
+  }
+
+  &:hover &__number {
+    background: $gradient-gold;
+    color: $white;
+    transform: scale(1.1);
+    box-shadow: $shadow-lg, 0 0 30px rgba($gold, 0.3);
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $charcoal;
+    margin-bottom: 8px;
+  }
+
+  &__desc {
+    font-size: 0.88rem;
+    color: $medium-gray;
+    line-height: 1.7;
+    max-width: 220px;
+    margin: 0 auto;
+  }
+}
+
+// ──────────────────────────────────────
+// CTA Section
+// ──────────────────────────────────────
+.cta-section {
+  padding: 100px 0;
+  background: $gradient-hero;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+
+  &__blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    opacity: 0.08;
+
+    &--1 {
+      width: 500px;
+      height: 500px;
+      top: -200px;
+      left: -100px;
+      background: $gold;
+    }
+    &--2 {
+      width: 400px;
+      height: 400px;
+      bottom: -150px;
+      right: -80px;
+      background: $rose;
+    }
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  &__tagline {
+    font-family: $font-accent;
+    font-size: 1.4rem;
+    color: $gold-light;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    @include heading-lg;
+    color: $white;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: rgba($white, 0.6);
+    font-size: 1.05rem;
+    margin-bottom: 40px;
+    line-height: 1.8;
+  }
+
+  &__btn {
+    @include btn-primary;
+    padding: 18px 48px;
+    font-size: 14px;
+  }
+}
+
+// ──────────────────────────────────────
+// Order Success Page
+// ──────────────────────────────────────
+.order-success {
+  text-align: center;
+  padding: calc($header-height + 80px) 24px 80px;
+  max-width: 520px;
+  margin: 0 auto;
+  animation: fadeInUp 0.6s $ease-smooth;
+
+  &__check {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba($success, 0.1);
+    @include flex-center;
+    margin: 0 auto 24px;
+    font-size: 2.5rem;
+    color: $success;
+    animation: scaleIn 0.5s $ease-bounce;
+  }
+
+  h1 {
+    font-family: $font-display;
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+
+  &__subtitle {
+    color: $medium-gray;
+    margin-bottom: 32px;
+    font-size: 1rem;
+
+    strong {
+      color: $gold-dark;
+    }
+  }
+
+  &__card {
+    @include card;
+    border-radius: $border-radius;
+    padding: 24px;
+    text-align: left;
+    margin-bottom: 32px;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      td {
+        padding: 12px 0;
+        border-bottom: 1px solid rgba($light-gray, 0.5);
+
+        &:first-child {
+          color: $medium-gray;
+          font-size: 0.88rem;
+        }
+
+        &:last-child {
+          text-align: right;
+          font-weight: 600;
+          color: $charcoal;
+        }
+      }
+
+      tr:last-child td { border-bottom: none; }
+    }
+
+    &-amount {
+      color: $gold-dark !important;
+      font-size: 1.1rem !important;
+    }
+  }
+
+  &__btn {
+    @include btn-primary;
+    padding: 14px 36px;
+  }
+}
+
+// ──────────────────────────────────────
+// My Orders Page
+// ──────────────────────────────────────
+.my-orders {
+  padding: calc($header-height + 48px) 24px 80px;
+  max-width: 960px;
+  margin: 0 auto;
+  animation: fadeInUp 0.5s $ease-smooth;
+}

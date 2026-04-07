@@ -224,7 +224,7 @@ export default function HomeCategoryCarousels() {
   }
 
   return (
-    <section className="home-category-carousels" aria-label="Artwork by category">
+    <section className="home-category-carousels" id="gallery" aria-label="Artwork by category">
       <div className="container">
         <div className="home-category-carousels__intro">
           <h2>Explore by category</h2>

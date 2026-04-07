@@ -4,6 +4,7 @@ import type { GalleryItem, Category } from '../../types';
 import Modal from '../../components/common/Modal';
 import Loader from '../../components/common/Loader';
 import { resolveUploadUrl } from '../../utils/apiOrigin';
+import '../../styles/components/_admin.scss';
 
 export default function ManageGallery() {
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -15,10 +16,7 @@ export default function ManageGallery() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const load = () => {
-    Promise.all([
-      galleryApi.list(),
-      categoryApi.listAll(),
-    ]).then(([galRes, catRes]) => {
+    Promise.all([galleryApi.list(), categoryApi.listAll()]).then(([galRes, catRes]) => {
       setItems(galRes.data.data);
       setCategories(catRes.data.data);
       setLoading(false);
@@ -56,28 +54,28 @@ export default function ManageGallery() {
     <div>
       <div className="admin-page-header">
         <h1>Gallery</h1>
-        <button className="admin-page-header__btn" onClick={() => setShowModal(true)}>+ Upload Image</button>
+        <button type="button" className="admin-page-header__btn" onClick={() => setShowModal(true)}>
+          + Upload Image
+        </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+      <div className="admin-gallery-grid">
         {items.map((item) => (
-          <div key={item.id} style={{ background: '#fff', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-            <img
-              src={resolveUploadUrl(item.image_url)}
-              alt={item.title || 'Gallery'}
-              style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-            />
-            <div style={{ padding: '12px' }}>
-              <p style={{ fontSize: '0.85rem', fontWeight: 500 }}>{item.title || 'Untitled'}</p>
-              <p style={{ fontSize: '0.75rem', color: '#999' }}>{item.category_name}</p>
-              <button
-                className="delete"
-                onClick={() => handleDelete(item.id)}
-                style={{ marginTop: '8px', padding: '4px 12px', border: 'none', borderRadius: '4px', background: 'rgba(231,76,60,0.1)', color: '#e74c3c', cursor: 'pointer', fontSize: '0.8rem' }}
-              >
-                Delete
-              </button>
+          <div key={item.id} className="admin-gallery-card">
+            <div className="admin-gallery-card__image-wrapper">
+              <img
+                className="admin-gallery-card__image"
+                src={resolveUploadUrl(item.image_url)}
+                alt={item.title || 'Gallery'}
+              />
             </div>
+            <div className="admin-gallery-card__info">
+              <div className="admin-gallery-card__info-title">{item.title || 'Untitled'}</div>
+              <div className="admin-gallery-card__info-category">{item.category_name}</div>
+            </div>
+            <button type="button" className="admin-gallery-card__delete" onClick={() => handleDelete(item.id)}>
+              Delete
+            </button>
           </div>
         ))}
       </div>
@@ -95,15 +93,15 @@ export default function ManageGallery() {
           </div>
           <div className="modal__field">
             <label>Title (optional)</label>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} />
+            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Portrait of a girl" />
           </div>
           <div className="modal__field">
-            <label>Image</label>
+            <label>Image File</label>
             <input type="file" ref={fileRef} accept="image/*" />
           </div>
           <div className="modal__actions">
-            <button className="btn-cancel" onClick={() => setShowModal(false)}>Cancel</button>
-            <button className="btn-save" onClick={handleUpload}>Upload</button>
+            <button type="button" className="btn-cancel" onClick={() => setShowModal(false)}>Cancel</button>
+            <button type="button" className="btn-save" onClick={handleUpload}>Upload</button>
           </div>
         </Modal>
       )}
