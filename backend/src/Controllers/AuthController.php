@@ -1,0 +1,169 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Helpers\Response;
+use App\Helpers\Validator;
+use App\Models\Admin;
+use App\Models\User;
+use App\Middleware\AuthMiddleware;
+use Firebase\JWT\JWT;
+
+class AuthController
+{
+    /**
+     * POST /api/auth/admin/login
+     * Body: { email, password }
+     */
+    public static function adminLogin(array $params): void
+    {
+        $body = Validator::getJsonBody();
+        $missing = Validator::required($body, ['email', 'password']);
+        if (!empty($missing)) {
+            Response::error('Missing fields: ' . implode(', ', $missing), 422);
+        }
+
+        $admin = Admin::findByEmail($body['email']);
+        if (!$admin || !password_verify($body['password'], $admin['password'])) {
+            Response::error('Invalid email or password', 401);
+        }
+
+        $config = require __DIR__ . '/../../config/app.php';
+        $token = JWT::encode([
+            'sub'  => $admin['id'],
+            'role' => 'admin',
+            'name' => $admin['name'],
+            'iat'  => time(),
+            'exp'  => time() + $config['jwt_expiry'],
+        ], $config['jwt_secret'], 'HS256');
+
+        Response::success([
+            'token' => $token,
+            'user'  => [
+                'id'    => $admin['id'],
+                'name'  => $admin['name'],
+                'email' => $admin['email'],
+                'role'  => 'admin',
+            ],
+        ], 'Login successful');
+    }
+
+    /**
+     * POST /api/auth/register
+     * Body: { name, email?, phone? }
+     * Simple registration without OTP for now.
+     */
+    public static function register(array $params): void
+    {
+        $body = Validator::getJsonBody();
+        $missing = Validator::required($body, ['name']);
+        if (!empty($missing)) {
+            Response::error('Name is required', 422);
+        }
+
+        if (empty($body['email']) && empty($body['phone'])) {
+            Response::error('Email or phone is required', 422);
+        }
+
+        // Check if user already exists
+        if (!empty($body['email'])) {
+            $existing = User::findByEmail($body['email']);
+            if ($existing) {
+                Response::error('Email already registered', 409);
+            }
+        }
+        if (!empty($body['phone'])) {
+            $existing = User::findByPhone($body['phone']);
+            if ($existing) {
+                Response::error('Phone already registered', 409);
+            }
+        }
+
+        $userId = User::create([
+            'name'  => Validator::sanitizeString($body['name']),
+            'email' => $body['email'] ?? null,
+            'phone' => $body['phone'] ?? null,
+        ]);
+
+        $config = require __DIR__ . '/../../config/app.php';
+        $token = JWT::encode([
+            'sub'  => $userId,
+            'role' => 'user',
+            'name' => $body['name'],
+            'iat'  => time(),
+            'exp'  => time() + $config['jwt_expiry'],
+        ], $config['jwt_secret'], 'HS256');
+
+        Response::success([
+            'token' => $token,
+            'user'  => [
+                'id'   => $userId,
+                'name' => $body['name'],
+                'role' => 'user',
+            ],
+        ], 'Registration successful', 201);
+    }
+
+    /**
+     * POST /api/auth/login
+     * Body: { email? , phone? }
+     * Simple user login (finds existing user, returns token).
+     */
+    public static function userLogin(array $params): void
+    {
+        $body = Validator::getJsonBody();
+
+        if (empty($body['email']) && empty($body['phone'])) {
+            Response::error('Email or phone is required', 422);
+        }
+
+        $user = null;
+        if (!empty($body['email'])) {
+            $user = User::findByEmail($body['email']);
+        } elseif (!empty($body['phone'])) {
+            $user = User::findByPhone($body['phone']);
+        }
+
+        if (!$user) {
+            Response::error('User not found', 404);
+        }
+
+        $config = require __DIR__ . '/../../config/app.php';
+        $token = JWT::encode([
+            'sub'  => $user['id'],
+            'role' => 'user',
+            'name' => $user['name'],
+            'iat'  => time(),
+            'exp'  => time() + $config['jwt_expiry'],
+        ], $config['jwt_secret'], 'HS256');
+
+        Response::success([
+            'token' => $token,
+            'user'  => [
+                'id'    => $user['id'],
+                'name'  => $user['name'],
+                'email' => $user['email'],
+                'phone' => $user['phone'],
+                'role'  => 'user',
+            ],
+        ], 'Login successful');
+    }
+
+    /**
+     * GET /api/auth/me
+     * Returns current authenticated user profile.
+     */
+    public static function me(array $params): void
+    {
+        $authUser = AuthMiddleware::getUser();
+        if ($authUser['role'] === 'admin') {
+            $admin = Admin::findById($authUser['sub']);
+            $admin['role'] = 'admin';
+            Response::success($admin);
+        } else {
+            $user = User::findById($authUser['sub']);
+            $user['role'] = 'user';
+            Response::success($user);
+        }
+    }
+}
