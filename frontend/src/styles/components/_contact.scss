@@ -1,0 +1,137 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.contact-page {
+  background: $white;
+
+  &__hero {
+    background: $gradient-hero;
+    color: $white;
+    padding: 140px 24px 56px;
+    text-align: center;
+    border-bottom: 3px solid $gold;
+  }
+
+  &__hero-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  &__eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: $gold-light;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.15;
+    color: $white;
+  }
+
+  &__lead {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  &__content {
+    padding: 64px 24px 80px;
+    max-width: 960px;
+    margin: 0 auto;
+
+    @include mobile {
+      padding: 40px 16px 72px;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+
+    @include tablet {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  &__map {
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    box-shadow: $shadow-lg;
+    border: 1px solid rgba($light-gray, 0.5);
+
+    iframe {
+      display: block;
+    }
+  }
+}
+
+.contact-card {
+  background: $white;
+  border-radius: $border-radius-lg;
+  padding: 36px 28px;
+  text-align: center;
+  box-shadow: $shadow;
+  border: 1px solid rgba($light-gray, 0.5);
+  transition: $transition;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-lg;
+    border-color: rgba($gold, 0.2);
+  }
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba($gold, 0.08);
+    @include flex-center;
+    margin: 0 auto 20px;
+    font-size: 1.6rem;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $charcoal;
+    margin-bottom: 8px;
+  }
+
+  &__text {
+    font-size: 0.88rem;
+    color: $medium-gray;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  &__link {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $gold-dark;
+    transition: color 0.2s;
+    word-break: break-all;
+
+    &:hover {
+      color: $gold;
+    }
+  }
+
+  &__address {
+    font-style: normal;
+    font-size: 0.92rem;
+    color: $dark-gray;
+    line-height: 1.7;
+  }
+}

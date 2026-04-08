@@ -41,9 +41,9 @@ export default function Footer() {
         <div className="footer__column">
           <h4>Connect</h4>
           <ul>
-            <li><a href="mailto:mail.madhanarts@gmail.com">Email Us</a></li>
+            <li><a href="mailto:mail.madhanarts@gmail.com">mail.madhanarts@gmail.com</a></li>
             <li><a href="tel:+919740376584">+91 97403 76584</a></li>
-            <li><a href="https://www.madhanarts.in" target="_blank" rel="noopener noreferrer">www.madhanarts.in</a></li>
+            <li><Link to="/contact">Contact Us</Link></li>
           </ul>
         </div>
       </div>

@@ -19,6 +19,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsConditions from './pages/TermsConditions';
 import ShippingPolicy from './pages/ShippingPolicy';
 import RefundPolicy from './pages/RefundPolicy';
+import ContactUs from './pages/ContactUs';
 
 export default function App() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
         <Route path="/terms" element={<TermsConditions />} />
         <Route path="/shipping-policy" element={<ShippingPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/contact" element={<ContactUs />} />
       </Route>
 
       {/* Admin Routes */}
