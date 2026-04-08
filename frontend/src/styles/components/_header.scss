@@ -54,15 +54,16 @@
     }
 
     &-text {
-      font-family: $font-display;
+      font-family: 'Playfair Display', $font-display;
       font-size: 1.6rem;
-      font-weight: 700;
+      font-weight: 900;
       color: $charcoal;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
 
       span {
         @include text-gradient($gradient-gold);
-        font-weight: 700;
+        font-weight: 900;
+        font-style: italic;
       }
     }
   }
