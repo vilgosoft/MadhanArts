@@ -18,7 +18,10 @@ export default function ManageGallery() {
   const [editTitle, setEditTitle] = useState('');
   const [editCategoryId, setEditCategoryId] = useState('');
   const [editSortOrder, setEditSortOrder] = useState(0);
+  const [editNewImage, setEditNewImage] = useState<File | null>(null);
+  const [editPreviewUrl, setEditPreviewUrl] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
+  const editFileRef = useRef<HTMLInputElement>(null);
 
   const load = () => {
     Promise.all([galleryApi.list(), categoryApi.listAll()]).then(([galRes, catRes]) => {
@@ -51,7 +54,23 @@ export default function ManageGallery() {
     setEditTitle(item.title || '');
     setEditCategoryId(String(item.category_id));
     setEditSortOrder(item.sort_order);
+    setEditNewImage(null);
+    setEditPreviewUrl('');
     setShowEditModal(true);
+  };
+
+  const handleEditImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setEditNewImage(file);
+      setEditPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const removeEditImage = () => {
+    setEditNewImage(null);
+    setEditPreviewUrl('');
+    if (editFileRef.current) editFileRef.current.value = '';
   };
 
   const handleEdit = async () => {
@@ -61,8 +80,15 @@ export default function ManageGallery() {
       category_id: Number(editCategoryId),
       sort_order: editSortOrder,
     });
+    if (editNewImage) {
+      const formData = new FormData();
+      formData.append('image', editNewImage);
+      await galleryApi.replaceImage(editItem.id, formData);
+    }
     setShowEditModal(false);
     setEditItem(null);
+    setEditNewImage(null);
+    setEditPreviewUrl('');
     load();
   };
 
@@ -141,12 +167,36 @@ export default function ManageGallery() {
       {showEditModal && editItem && (
         <Modal title="Edit Gallery Item" onClose={() => setShowEditModal(false)}>
           <div className="modal__field">
-            <label>Preview</label>
-            <img
-              src={resolveUploadUrl(editItem.image_url)}
-              alt="Preview"
-              style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }}
-            />
+            <label>Image</label>
+            <div className="modal__image-edit">
+              <img
+                src={editPreviewUrl || resolveUploadUrl(editItem.image_url)}
+                alt="Preview"
+                className="modal__image-preview"
+              />
+              <div className="modal__image-actions">
+                {editNewImage ? (
+                  <button type="button" className="btn-remove" onClick={removeEditImage}>
+                    Remove New Photo
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn-change"
+                    onClick={() => editFileRef.current?.click()}
+                  >
+                    Change Photo
+                  </button>
+                )}
+              </div>
+              <input
+                type="file"
+                ref={editFileRef}
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleEditImageChange}
+              />
+            </div>
           </div>
           <div className="modal__field">
             <label>Title</label>
@@ -165,8 +215,8 @@ export default function ManageGallery() {
             <input type="number" value={editSortOrder} onChange={(e) => setEditSortOrder(Number(e.target.value))} />
           </div>
           <div className="modal__actions">
-            <button className="btn-cancel" onClick={() => setShowEditModal(false)}>Cancel</button>
-            <button className="btn-save" onClick={handleEdit}>Save Changes</button>
+            <button type="button" className="btn-cancel" onClick={() => setShowEditModal(false)}>Cancel</button>
+            <button type="button" className="btn-save" onClick={handleEdit}>Save Changes</button>
           </div>
         </Modal>
       )}

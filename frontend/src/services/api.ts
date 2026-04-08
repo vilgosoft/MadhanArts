@@ -88,6 +88,11 @@ export const galleryApi = {
   update: (id: number, data: Partial<GalleryItem>) =>
     api.put<ApiResponse<GalleryItem>>(`/gallery/${id}`, data),
 
+  replaceImage: (id: number, formData: FormData) =>
+    api.post<ApiResponse<GalleryItem>>(`/gallery/${id}/image`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
+
   delete: (id: number) =>
     api.delete<ApiResponse<null>>(`/gallery/${id}`),
 };
