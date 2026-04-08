@@ -40,6 +40,10 @@
     position: relative;
     transition: $transition;
 
+    @include mobile {
+      gap: 8px;
+    }
+
     &:hover {
       transform: scale(1.02);
     }
@@ -47,6 +51,11 @@
     &-svg {
       transition: $transition;
       flex-shrink: 0;
+
+      @include mobile {
+        width: 32px !important;
+        height: 32px !important;
+      }
     }
 
     &:hover &-svg {
@@ -59,6 +68,12 @@
       font-weight: 900;
       color: $charcoal;
       letter-spacing: 1px;
+      white-space: nowrap;
+
+      @include mobile {
+        font-size: 1.2rem;
+        letter-spacing: 0.5px;
+      }
 
       span {
         @include text-gradient($gradient-gold);
@@ -158,6 +173,10 @@
     @include btn-secondary;
     padding: 10px 24px;
     font-size: 11px;
+
+    @include tablet {
+      display: none;
+    }
   }
 
   &__menu-toggle {
