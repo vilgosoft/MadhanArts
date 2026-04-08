@@ -46,7 +46,11 @@ export default function ManagePricing() {
 
   const handleSave = async () => {
     if (editing) {
-      await pricingApi.update(editing.id, { price: Number(form.price) as unknown as string });
+      await pricingApi.update(editing.id, {
+        category_id: Number(form.category_id),
+        size_id: Number(form.size_id),
+        price: Number(form.price),
+      });
     } else {
       await pricingApi.create({
         category_id: Number(form.category_id),
@@ -107,7 +111,6 @@ export default function ManagePricing() {
             <select
               value={form.category_id}
               onChange={(e) => setForm({ ...form, category_id: e.target.value })}
-              disabled={!!editing}
             >
               <option value="">Select category...</option>
               {categories.map((c) => (
@@ -120,7 +123,6 @@ export default function ManagePricing() {
             <select
               value={form.size_id}
               onChange={(e) => setForm({ ...form, size_id: e.target.value })}
-              disabled={!!editing}
             >
               <option value="">Select size...</option>
               {sizes.map((s) => (

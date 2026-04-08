@@ -111,6 +111,12 @@ class PricingController
         $body = Validator::getJsonBody();
         $data = [];
 
+        if (isset($body['category_id'])) {
+            $data['category_id'] = (int) $body['category_id'];
+        }
+        if (isset($body['size_id'])) {
+            $data['size_id'] = (int) $body['size_id'];
+        }
         if (isset($body['price'])) {
             $data['price'] = (float) $body['price'];
         }
