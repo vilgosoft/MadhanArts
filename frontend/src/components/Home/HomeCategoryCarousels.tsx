@@ -18,6 +18,9 @@ function formatFromPrice(min: number, currency: string): string {
   return `From ${currency} ${n}`;
 }
 
+const AUTO_SCROLL_MS = 4000;
+const MOBILE_BP = 576;
+
 function CategoryCarousel({
   category,
   items,
@@ -55,11 +58,33 @@ function CategoryCarousel({
     };
   }, [items, updateNav]);
 
+  // Auto-scroll on mobile
+  useEffect(() => {
+    if (items.length <= 1) return;
+    const isMobile = () => window.innerWidth <= MOBILE_BP;
+    if (!isMobile()) return;
+
+    const timer = setInterval(() => {
+      if (!isMobile()) return;
+      const el = trackRef.current;
+      if (!el) return;
+      const { scrollLeft, scrollWidth, clientWidth } = el;
+      if (scrollLeft >= scrollWidth - clientWidth - 6) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: clientWidth, behavior: 'smooth' });
+      }
+    }, AUTO_SCROLL_MS);
+
+    return () => clearInterval(timer);
+  }, [items.length]);
+
   const scrollByDir = (dir: -1 | 1) => {
     const el = trackRef.current;
     if (!el) return;
     const card = el.querySelector<HTMLElement>('.category-carousel__card');
-    const step = (card?.offsetWidth ?? 280) + 18;
+    const gap = window.innerWidth <= MOBILE_BP ? 0 : 18;
+    const step = (card?.offsetWidth ?? 280) + gap;
     el.scrollBy({ left: dir * step, behavior: 'smooth' });
   };
 

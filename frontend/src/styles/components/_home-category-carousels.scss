@@ -139,6 +139,16 @@
       background: $light-gray;
       border-radius: 3px;
     }
+
+    @include mobile {
+      gap: 0;
+      padding: 8px 0 12px;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
   }
 
   &__card {
@@ -153,6 +163,10 @@
     &:hover {
       box-shadow: $shadow-lg;
       transform: translateY(-3px);
+    }
+
+    @include mobile {
+      flex: 0 0 100%;
     }
   }
 
