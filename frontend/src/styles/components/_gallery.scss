@@ -34,11 +34,12 @@
     font-weight: 700;
     margin-bottom: 16px;
     line-height: 1.15;
+    color: $white;
   }
 
   &__lead {
     font-size: 1.05rem;
-    color: rgba(255, 255, 255, 0.72);
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1.65;
     margin: 0;
   }
