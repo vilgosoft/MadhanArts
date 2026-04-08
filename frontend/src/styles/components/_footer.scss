@@ -161,5 +161,9 @@
         &:hover { color: $gold; }
       }
     }
+
+    @include mobile {
+      padding-bottom: 72px;
+    }
   }
 }

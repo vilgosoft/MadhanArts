@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import ScrollToTop from './components/common/ScrollToTop';
 import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage';
 import GalleryPage from './pages/GalleryPage';
@@ -17,6 +18,8 @@ import ManageUsers from './pages/admin/ManageUsers';
 
 export default function App() {
   return (
+    <>
+    <ScrollToTop />
     <Routes>
       {/* Public Routes */}
       <Route element={<Layout />}>
@@ -41,5 +44,6 @@ export default function App() {
         </Route>
       </Route>
     </Routes>
+    </>
   );
 }

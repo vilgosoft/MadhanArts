@@ -192,6 +192,11 @@
     .gallery-card__overlay-content {
       transform: translateY(0);
     }
+
+    @include mobile {
+      transform: none;
+      box-shadow: $shadow;
+    }
   }
 
   &__image-wrapper {
@@ -223,6 +228,10 @@
     display: flex;
     align-items: flex-end;
     padding: 28px;
+
+    @include mobile {
+      display: none;
+    }
   }
 
   &__overlay-content {
@@ -258,6 +267,10 @@
     background: $white;
     position: relative;
 
+    @include mobile {
+      padding: 10px 12px;
+    }
+
     &::before {
       content: '';
       position: absolute;
@@ -267,6 +280,11 @@
       height: 1px;
       background: $gradient-gold;
       opacity: 0.3;
+
+      @include mobile {
+        left: 12px;
+        right: 12px;
+      }
     }
 
     h3 {
@@ -275,12 +293,21 @@
       font-weight: 600;
       color: $charcoal;
       margin-bottom: 4px;
+
+      @include mobile {
+        font-size: 0.75rem;
+        margin-bottom: 2px;
+      }
     }
 
     span {
       font-size: 0.78rem;
       color: $medium-gray;
       font-weight: 500;
+
+      @include mobile {
+        font-size: 0.68rem;
+      }
     }
   }
 }

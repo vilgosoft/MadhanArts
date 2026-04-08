@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
+import BottomNav from './BottomNav';
 
 export default function Layout() {
   const { pathname } = useLocation();
@@ -14,6 +15,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <BottomNav />
     </>
   );
 }
