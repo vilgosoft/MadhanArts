@@ -41,9 +41,9 @@ export default function Footer() {
         <div className="footer__column">
           <h4>Connect</h4>
           <ul>
-            <li><a href="#">Instagram</a></li>
-            <li><a href="#">YouTube</a></li>
-            <li><a href="#">WhatsApp</a></li>
+            <li><a href="mailto:mail.madhanarts@gmail.com">Email Us</a></li>
+            <li><a href="tel:+919740376584">+91 97403 76584</a></li>
+            <li><a href="https://www.madhanarts.in" target="_blank" rel="noopener noreferrer">www.madhanarts.in</a></li>
           </ul>
         </div>
       </div>
@@ -51,8 +51,7 @@ export default function Footer() {
       <div className="footer__bottom">
         <p>&copy; {new Date().getFullYear()} Madhan Arts. Crafted with passion.</p>
         <div className="footer__bottom-links">
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
+          <Link to="/privacy-policy">Privacy Policy</Link>
         </div>
       </div>
     </footer>

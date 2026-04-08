@@ -1,0 +1,181 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.legal-page {
+  background: $white;
+
+  &__hero {
+    background: $gradient-hero;
+    color: $white;
+    padding: 140px 24px 56px;
+    text-align: center;
+    border-bottom: 3px solid $gold;
+  }
+
+  &__hero-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  &__eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: $gold-light;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.15;
+    color: $white;
+  }
+
+  &__lead {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  // Content area
+  &__content {
+    padding: 64px 24px 80px;
+    background: $cream;
+
+    @include mobile {
+      padding: 40px 16px 72px;
+    }
+  }
+
+  &__container {
+    max-width: 780px;
+    margin: 0 auto;
+    background: $white;
+    border-radius: $border-radius-lg;
+    padding: 48px;
+    box-shadow: $shadow;
+    border: 1px solid rgba($light-gray, 0.5);
+
+    @include mobile {
+      padding: 28px 20px;
+    }
+  }
+
+  &__intro {
+    font-size: 1.05rem;
+    color: $charcoal;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid rgba($gold, 0.15);
+    line-height: 1.7;
+
+    strong {
+      color: $gold-dark;
+    }
+  }
+
+  &__section {
+    margin-bottom: 36px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h2 {
+      font-family: $font-display;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: $charcoal;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba($light-gray, 0.5);
+
+      @include mobile {
+        font-size: 1.15rem;
+      }
+    }
+
+    h3 {
+      font-family: $font-body;
+      font-size: 1rem;
+      font-weight: 600;
+      color: $dark-gray;
+      margin-bottom: 8px;
+      margin-top: 20px;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+
+    p {
+      font-size: 0.95rem;
+      color: $medium-gray;
+      line-height: 1.75;
+      margin-bottom: 12px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__contact {
+    margin-top: 40px;
+    padding: 32px;
+    background: linear-gradient(135deg, rgba($gold, 0.04), rgba($lavender, 0.04));
+    border-radius: $border-radius;
+    border: 1px solid rgba($gold, 0.12);
+
+    @include mobile {
+      padding: 24px 18px;
+    }
+
+    h2 {
+      font-family: $font-display;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: $charcoal;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 0.95rem;
+      color: $medium-gray;
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    li {
+      font-size: 0.92rem;
+      color: $dark-gray;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      a {
+        color: $gold-dark;
+        font-weight: 600;
+        transition: color 0.2s;
+
+        &:hover {
+          color: $gold;
+        }
+      }
+    }
+  }
+}

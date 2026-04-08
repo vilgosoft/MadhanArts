@@ -6,7 +6,7 @@ import BottomNav from './BottomNav';
 export default function Layout() {
   const { pathname } = useLocation();
   // Hero pages handle their own padding
-  const isFullPage = pathname === '/' || pathname === '/gallery';
+  const isFullPage = pathname === '/' || pathname === '/gallery' || pathname === '/privacy-policy';
 
   return (
     <>
