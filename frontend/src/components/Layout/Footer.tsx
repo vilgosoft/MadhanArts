@@ -29,12 +29,12 @@ export default function Footer() {
         </div>
 
         <div className="footer__column">
-          <h4>Art Styles</h4>
+          <h4>Policies</h4>
           <ul>
-            <li><a href="#gallery">Pencil Sketch</a></li>
-            <li><a href="#gallery">Color Pencil</a></li>
-            <li><a href="#gallery">Acrylic Painting</a></li>
-            <li><a href="#gallery">Oil Painting</a></li>
+            <li><Link to="/privacy-policy">Privacy Policy</Link></li>
+            <li><Link to="/terms">Terms &amp; Conditions</Link></li>
+            <li><Link to="/shipping-policy">Shipping Policy</Link></li>
+            <li><Link to="/refund-policy">Return &amp; Refund</Link></li>
           </ul>
         </div>
 
@@ -51,7 +51,10 @@ export default function Footer() {
       <div className="footer__bottom">
         <p>&copy; {new Date().getFullYear()} Madhan Arts. Crafted with passion.</p>
         <div className="footer__bottom-links">
-          <Link to="/privacy-policy">Privacy Policy</Link>
+          <Link to="/privacy-policy">Privacy</Link>
+          <Link to="/terms">Terms</Link>
+          <Link to="/shipping-policy">Shipping</Link>
+          <Link to="/refund-policy">Refund</Link>
         </div>
       </div>
     </footer>

@@ -125,6 +125,34 @@
     }
   }
 
+  &__list {
+    padding-left: 20px;
+    margin: 12px 0;
+
+    li {
+      font-size: 0.95rem;
+      color: $medium-gray;
+      line-height: 1.75;
+      margin-bottom: 10px;
+      position: relative;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__highlight {
+    background: rgba($gold, 0.06);
+    border-left: 3px solid $gold;
+    padding: 16px 20px;
+    border-radius: 0 $border-radius-sm $border-radius-sm 0;
+    font-weight: 600;
+    color: $dark-gray;
+    font-size: 0.88rem !important;
+    line-height: 1.7 !important;
+  }
+
   &__contact {
     margin-top: 40px;
     padding: 32px;
