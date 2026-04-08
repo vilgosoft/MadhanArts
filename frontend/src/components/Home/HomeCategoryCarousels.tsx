@@ -75,15 +75,6 @@ function CategoryCarousel({
               <p className="category-carousel-section__desc">{category.description}</p>
             ) : null}
           </div>
-          <div className="category-carousel-section__actions">
-            <button
-              type="button"
-              className="category-carousel-section__gallery-link"
-              onClick={() => navigate('/gallery')}
-            >
-              Full gallery
-            </button>
-          </div>
         </div>
 
         {items.length === 0 ? (
@@ -99,54 +90,64 @@ function CategoryCarousel({
         ) : (
           <div className="category-carousel">
             <div className="category-carousel__row">
-            <button
-              type="button"
-              className="category-carousel__nav"
-              aria-label="Scroll left"
-              disabled={!canPrev}
-              onClick={() => scrollByDir(-1)}
-            >
-              ‹
-            </button>
-            <div ref={trackRef} className="category-carousel__track" role="list">
-              {items.map((item) => (
-                <article key={item.id} className="category-carousel__card" role="listitem">
-                  <button
-                    type="button"
-                    className="category-carousel__image-link"
-                    onClick={goOrder}
-                    aria-label={item.title ? `View order options: ${item.title}` : 'View order options'}
-                  >
-                    <img
-                      className="category-carousel__image"
-                      src={resolveUploadUrl(item.image_url)}
-                      alt={item.title || category.name}
-                      loading="lazy"
-                    />
-                  </button>
-                  <div className="category-carousel__meta">
-                    {item.title ? <h3 className="category-carousel__item-title">{item.title}</h3> : null}
-                    {minPrice ? (
-                      <p className="category-carousel__from">{formatFromPrice(minPrice.min, minPrice.currency)}</p>
-                    ) : null}
-                    <button type="button" className="category-carousel__card-order" onClick={goOrder}>
-                      Order this style
+              <button
+                type="button"
+                className="category-carousel__nav"
+                aria-label="Scroll left"
+                disabled={!canPrev}
+                onClick={() => scrollByDir(-1)}
+              >
+                &#8249;
+              </button>
+              <div ref={trackRef} className="category-carousel__track" role="list">
+                {items.map((item) => (
+                  <article key={item.id} className="category-carousel__card" role="listitem">
+                    <button
+                      type="button"
+                      className="category-carousel__image-link"
+                      onClick={goOrder}
+                      aria-label={item.title ? `View order options: ${item.title}` : 'View order options'}
+                    >
+                      <img
+                        className="category-carousel__image"
+                        src={resolveUploadUrl(item.image_url)}
+                        alt={item.title || category.name}
+                        loading="lazy"
+                      />
                     </button>
-                  </div>
-                </article>
-              ))}
+                    <div className="category-carousel__meta">
+                      {item.title ? <h3 className="category-carousel__item-title">{item.title}</h3> : null}
+                      {minPrice ? (
+                        <p className="category-carousel__from">{formatFromPrice(minPrice.min, minPrice.currency)}</p>
+                      ) : null}
+                      <button type="button" className="category-carousel__card-order" onClick={goOrder}>
+                        Order this style
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="category-carousel__nav"
+                aria-label="Scroll right"
+                disabled={!canNext}
+                onClick={() => scrollByDir(1)}
+              >
+                &#8250;
+              </button>
             </div>
-            <button
-              type="button"
-              className="category-carousel__nav"
-              aria-label="Scroll right"
-              disabled={!canNext}
-              onClick={() => scrollByDir(1)}
-            >
-              ›
-            </button>
+
+            <div className="category-carousel__footer">
+              <button
+                type="button"
+                className="category-carousel__full-gallery"
+                onClick={() => navigate('/gallery')}
+              >
+                View Full Gallery &rarr;
+              </button>
+            </div>
           </div>
-        </div>
         )}
       </div>
     </section>

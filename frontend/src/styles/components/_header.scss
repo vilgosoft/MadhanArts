@@ -137,12 +137,20 @@
     strong {
       color: $gold-dark;
     }
+
+    @include tablet {
+      display: none;
+    }
   }
 
   &__btn {
     @include btn-primary;
     padding: 10px 24px;
     font-size: 11px;
+
+    @include tablet {
+      display: none;
+    }
   }
 
   &__btn--ghost {

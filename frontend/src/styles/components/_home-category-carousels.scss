@@ -68,27 +68,6 @@
     margin: 0;
   }
 
-  &__actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  &__gallery-link {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: $gold;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-family: $font-body;
-
-    &:hover {
-      color: $gold-dark;
-    }
-  }
 }
 
 .category-carousel {
@@ -233,6 +212,38 @@
       max-width: 260px;
       margin-left: auto;
       margin-right: auto;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba($light-gray, 0.6);
+  }
+
+  &__full-gallery {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: $font-body;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $white;
+    background: $gradient-gold;
+    border: none;
+    border-radius: $border-radius-xl;
+    padding: 12px 32px;
+    cursor: pointer;
+    transition: $transition;
+    box-shadow: $shadow, $shadow-gold;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-lg, 0 4px 20px rgba($gold, 0.3);
     }
   }
 
