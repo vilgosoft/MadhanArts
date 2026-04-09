@@ -65,7 +65,13 @@ export default function OrderWizard() {
       const res = await orderApi.create(formData);
       navigate('/order-success', { state: { order: res.data.data } });
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to place order. Please try again.';
+      let message = 'Failed to place order. Please try again.';
+      if (err && typeof err === 'object' && 'response' in err) {
+        const axiosErr = err as { response?: { data?: { message?: string } } };
+        message = axiosErr.response?.data?.message || message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
       setError(message);
     } finally {
       setSubmitting(false);
@@ -165,7 +171,7 @@ export default function OrderWizard() {
             ) : (
               <button
                 className="wizard-nav__next"
-                disabled={submitting || !user}
+                disabled={submitting || !user || !canNext()}
                 onClick={handleSubmit}
               >
                 {submitting ? 'Placing Order...' : !user ? 'Login to Order' : 'Place Order &#10003;'}
