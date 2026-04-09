@@ -171,10 +171,10 @@ export default function OrderWizard() {
             ) : (
               <button
                 className="wizard-nav__next"
-                disabled={submitting || !user || !canNext()}
+                disabled={submitting || !canNext()}
                 onClick={handleSubmit}
               >
-                {submitting ? 'Placing Order...' : !user ? 'Login to Order' : 'Place Order &#10003;'}
+                {submitting ? 'Placing Order...' : 'Place Order'}
               </button>
             )}
           </div>

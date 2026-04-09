@@ -12,6 +12,8 @@ use App\Models\Size;
 
 class OrderController
 {
+    private const ADMIN_NOTIFICATION_EMAIL = 'mail.madhanarts@gmail.com';
+
     /**
      * POST /api/orders
      * Expects multipart/form-data with 'reference_photo' file,
@@ -92,6 +94,7 @@ class OrderController
         ]);
 
         $order = Order::findById($orderId);
+        self::notifyAdminForNewOrder($order);
         Response::success($order, 'Order created', 201);
     }
 
@@ -185,5 +188,48 @@ class OrderController
         header('Content-Length: ' . filesize($filePath));
         readfile($filePath);
         exit;
+    }
+
+    private static function notifyAdminForNewOrder(array $order): void
+    {
+        if (!function_exists('mail')) {
+            error_log('Order email notification skipped: mail() unavailable');
+            return;
+        }
+
+        $to = self::ADMIN_NOTIFICATION_EMAIL;
+        $subject = 'New Order Received - ' . ($order['order_number'] ?? 'Madhan Arts');
+        $safeAddress = preg_replace('/\s+/', ' ', (string) ($order['delivery_address'] ?? ''));
+        $neededBy = !empty($order['needed_by_date']) ? (string) $order['needed_by_date'] : 'Not specified';
+        $amount = 'INR ' . number_format((float) ($order['amount'] ?? 0), 2);
+
+        $message = implode("\n", [
+            'A new order has been placed on Madhan Arts.',
+            '',
+            'Order Number: ' . ($order['order_number'] ?? '-'),
+            'Customer Name: ' . ($order['user_name'] ?? '-'),
+            'Customer Email: ' . ($order['user_email'] ?? '-'),
+            'Customer Phone: ' . ($order['user_phone'] ?? '-'),
+            'Category: ' . ($order['category_name'] ?? '-'),
+            'Size: ' . ($order['size_label'] ?? '-'),
+            'Amount: ' . $amount,
+            'Needed By: ' . $neededBy,
+            'Delivery Address: ' . $safeAddress,
+            'Reference Photo Path: ' . ($order['reference_photo'] ?? '-'),
+            'Created At: ' . ($order['created_at'] ?? '-'),
+        ]);
+
+        $headers = [
+            'MIME-Version: 1.0',
+            'Content-type: text/plain; charset=UTF-8',
+            'From: Madhan Arts <noreply@madhanarts.in>',
+            'Reply-To: noreply@madhanarts.in',
+            'X-Mailer: PHP/' . phpversion(),
+        ];
+
+        $ok = @mail($to, $subject, $message, implode("\r\n", $headers));
+        if (!$ok) {
+            error_log('Order email notification failed for order ' . ($order['order_number'] ?? 'unknown'));
+        }
     }
 }

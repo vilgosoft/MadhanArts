@@ -17,14 +17,23 @@ export default function PriceSummary({
   deliveryAddress, neededByDate, onAddressChange, onDateChange,
 }: Props) {
   const symbol = currency === 'INR' ? '\u20B9' : '$';
-  const formatted = `${symbol}${parseFloat(price).toLocaleString('en-IN')}`;
+  const artworkAmount = Number.parseFloat(price) || 0;
+  const shippingCharge = 70;
+  const totalAmount = artworkAmount + shippingCharge;
+  const formattedArtwork = `${symbol}${artworkAmount.toLocaleString('en-IN')}`;
+  const formattedShipping = `${symbol}${shippingCharge.toLocaleString('en-IN')}`;
+  const formattedTotal = `${symbol}${totalAmount.toLocaleString('en-IN')}`;
 
-  // Minimum date = today
-  const today = new Date().toISOString().split('T')[0];
+  // Minimum needed-by date = today + 7 days (artwork needs crafting time).
+  const minNeededBy = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 7);
+    return d.toISOString().split('T')[0];
+  })();
 
   return (
     <div className="price-summary">
-      <div className="price-summary__amount">{formatted}</div>
+      <div className="price-summary__amount">{formattedTotal}</div>
       <div className="price-summary__currency">Total Amount ({currency})</div>
 
       {/* Delivery details */}
@@ -46,8 +55,11 @@ export default function PriceSummary({
             type="date"
             value={neededByDate}
             onChange={(e) => onDateChange(e.target.value)}
-            min={today}
+            min={minNeededBy}
           />
+          <p className="price-summary__date-note">
+            Orders placed today can be delivered after 7 days. Each artwork is handcrafted and takes time.
+          </p>
         </div>
       </div>
 
@@ -64,7 +76,15 @@ export default function PriceSummary({
             </tr>
             <tr>
               <td>Amount</td>
-              <td><strong>{formatted}</strong></td>
+              <td>{formattedArtwork}</td>
+            </tr>
+            <tr>
+              <td>Shipping Charge</td>
+              <td>{formattedShipping}</td>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td><strong>{formattedTotal}</strong></td>
             </tr>
           </tbody>
         </table>

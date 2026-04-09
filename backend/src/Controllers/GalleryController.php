@@ -180,6 +180,33 @@ class GalleryController
     }
 
     /**
+     * DELETE /api/gallery/:id/image
+     * Remove image only; keep gallery item metadata/card in DB.
+     */
+    public static function removeImage(array $params): void
+    {
+        $id = (int) $params['id'];
+        $item = GalleryItem::findById($id);
+        if (!$item) {
+            Response::error('Gallery item not found', 404);
+        }
+
+        $config = require __DIR__ . '/../../config/app.php';
+        if (!empty($item['image_url'])) {
+            $rel = preg_replace('#^/uploads/#', '', $item['image_url']);
+            $filePath = $config['upload_path'] . '/' . $rel;
+            if (file_exists($filePath)) {
+                @unlink($filePath);
+            }
+        }
+
+        // Keep the record, clear photo only.
+        GalleryItem::update($id, ['image_url' => '']);
+        $updated = GalleryItem::findById($id);
+        Response::success($updated, 'Gallery image removed');
+    }
+
+    /**
      * DELETE /api/gallery/:id
      */
     public static function delete(array $params): void

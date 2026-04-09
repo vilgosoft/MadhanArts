@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { categoryApi, galleryApi, pricingApi } from '../../services/api';
 import type { Category, GalleryItem } from '../../types';
 import { resolveUploadUrl } from '../../utils/apiOrigin';
@@ -31,11 +32,19 @@ function CategoryCarousel({
   minPrice: CategoryMinPrice | null;
 }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
 
-  const goOrder = () => navigate(`/order/${category.id}`);
+  const goOrder = () => {
+    const orderPath = `/order/${category.id}`;
+    if (!user) {
+      navigate('/login', { state: { returnTo: orderPath } });
+      return;
+    }
+    navigate(orderPath);
+  };
 
   const updateNav = useCallback(() => {
     const el = trackRef.current;

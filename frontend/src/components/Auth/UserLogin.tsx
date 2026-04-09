@@ -28,20 +28,20 @@ export default function UserLogin() {
         const res = await authApi.register(name, email || undefined, phone || undefined);
         login(res.data.data.token, res.data.data.user);
       } else {
-        const res = await authApi.login(email || undefined, phone || undefined);
+        const res = await authApi.login(undefined, phone || undefined);
         login(res.data.data.token, res.data.data.user);
       }
       navigate(returnTo);
     } catch (err) {
       const fallback =
-        mode === 'register' ? 'Registration failed. Please try again.' : 'User not found. Please register first.';
+        mode === 'register' ? 'Registration failed. Please try again.' : 'Phone number not found. Please register first.';
       if (axios.isAxiosError(err)) {
         const data = err.response?.data;
         if (data && typeof data === 'object') {
           const d = data as { message?: string; error?: string };
           setError(d.message || d.error || fallback);
         } else if (err.code === 'ERR_NETWORK') {
-          setError('Cannot reach API. Is the server running (port 8000) and VITE_API_URL correct?');
+          setError('Cannot reach API. Please verify backend upload, .htaccess routing, and VITE_API_URL (/api).');
         } else {
           setError(fallback);
         }
@@ -71,13 +71,15 @@ export default function UserLogin() {
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Your full name" />
             </div>
           )}
+          {mode === 'register' && (
+            <div className="modal__field">
+              <label>Email (Optional)</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
+            </div>
+          )}
           <div className="modal__field">
-            <label>Email</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
-          </div>
-          <div className="modal__field">
-            <label>Phone</label>
-            <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 9876543210" />
+            <label>Phone (Required)</label>
+            <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 9876543210" required />
           </div>
 
           {error && <div className="auth-card__error">{error}</div>}

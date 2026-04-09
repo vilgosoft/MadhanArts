@@ -86,6 +86,8 @@ $router->delete('/api/gallery/:id', [GalleryController::class, 'delete'],
     [[AdminMiddleware::class, 'handle']]);
 $router->post('/api/gallery/:id/image', [GalleryController::class, 'replaceImage'],
     [[AdminMiddleware::class, 'handle']]);
+$router->delete('/api/gallery/:id/image', [GalleryController::class, 'removeImage'],
+    [[AdminMiddleware::class, 'handle']]);
 
 // ──────────────────────────────────────
 // Size Routes

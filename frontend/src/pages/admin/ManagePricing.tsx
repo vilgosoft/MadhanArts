@@ -3,6 +3,7 @@ import { pricingApi, categoryApi, sizeApi } from '../../services/api';
 import type { PricingRule, Category, Size } from '../../types';
 import Modal from '../../components/common/Modal';
 import Loader from '../../components/common/Loader';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
 
 export default function ManagePricing() {
   const [rules, setRules] = useState<PricingRule[]>([]);
@@ -11,6 +12,7 @@ export default function ManagePricing() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState<PricingRule | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<PricingRule | null>(null);
   const [form, setForm] = useState({ category_id: '', size_id: '', price: '' });
 
   const load = () => {
@@ -63,10 +65,8 @@ export default function ManagePricing() {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Delete this pricing rule?')) {
-      await pricingApi.delete(id);
-      load();
-    }
+    await pricingApi.delete(id);
+    load();
   };
 
   if (loading) return <Loader />;
@@ -90,13 +90,13 @@ export default function ManagePricing() {
         <tbody>
           {rules.map((rule) => (
             <tr key={rule.id}>
-              <td>{rule.category_name}</td>
-              <td>{rule.size_label}</td>
-              <td><strong>₹{parseFloat(rule.price).toLocaleString('en-IN')}</strong></td>
-              <td>
+              <td data-label="Category">{rule.category_name}</td>
+              <td data-label="Size">{rule.size_label}</td>
+              <td data-label="Price (INR)"><strong>₹{parseFloat(rule.price).toLocaleString('en-IN')}</strong></td>
+              <td data-label="Actions">
                 <div className="admin-table__actions">
                   <button className="edit" onClick={() => openEdit(rule)}>Edit</button>
-                  <button className="delete" onClick={() => handleDelete(rule.id)}>Delete</button>
+                  <button className="delete" onClick={() => setDeleteTarget(rule)}>Delete</button>
                 </div>
               </td>
             </tr>
@@ -144,6 +144,20 @@ export default function ManagePricing() {
             <button className="btn-save" onClick={handleSave}>Save</button>
           </div>
         </Modal>
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Delete Pricing Rule"
+          message={`Delete price rule for "${deleteTarget.category_name}" - "${deleteTarget.size_label}"?`}
+          confirmText="Delete"
+          danger
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={async () => {
+            await handleDelete(deleteTarget.id);
+            setDeleteTarget(null);
+          }}
+        />
       )}
     </div>
   );

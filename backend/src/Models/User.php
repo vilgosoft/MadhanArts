@@ -28,8 +28,20 @@ class User
     public static function findByPhone(string $phone): ?array
     {
         $db = Database::getConnection();
-        $stmt = $db->prepare('SELECT * FROM users WHERE phone = :phone LIMIT 1');
-        $stmt->execute(['phone' => $phone]);
+        $digitsOnly = preg_replace('/\D+/', '', $phone) ?? '';
+        $phone10 = strlen($digitsOnly) > 10 ? substr($digitsOnly, -10) : $digitsOnly;
+
+        $stmt = $db->prepare(
+            "SELECT *
+             FROM users
+             WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '+', ''), '(', ''), ')', '') = :raw
+                OR RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '+', ''), '(', ''), ')', ''), 10) = :phone10
+             LIMIT 1"
+        );
+        $stmt->execute([
+            'raw' => $digitsOnly,
+            'phone10' => $phone10,
+        ]);
         $result = $stmt->fetch();
         return $result ?: null;
     }

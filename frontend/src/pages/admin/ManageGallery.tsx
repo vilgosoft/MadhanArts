@@ -3,6 +3,7 @@ import { galleryApi, categoryApi } from '../../services/api';
 import type { GalleryItem, Category } from '../../types';
 import Modal from '../../components/common/Modal';
 import Loader from '../../components/common/Loader';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
 import { resolveUploadUrl } from '../../utils/apiOrigin';
 import '../../styles/components/_admin.scss';
 
@@ -20,8 +21,11 @@ export default function ManageGallery() {
   const [editSortOrder, setEditSortOrder] = useState(0);
   const [editNewImage, setEditNewImage] = useState<File | null>(null);
   const [editPreviewUrl, setEditPreviewUrl] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<GalleryItem | null>(null);
+  const [confirmRemoveInEdit, setConfirmRemoveInEdit] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const editFileRef = useRef<HTMLInputElement>(null);
+  const hasCurrentPhoto = !!(editItem?.image_url && editItem.image_url.trim() !== '');
 
   const load = () => {
     Promise.all([galleryApi.list(), categoryApi.listAll()]).then(([galRes, catRes]) => {
@@ -92,11 +96,19 @@ export default function ManageGallery() {
     load();
   };
 
+  const handleRemoveCurrentImage = async () => {
+    if (!editItem) return;
+    await galleryApi.removeImage(editItem.id);
+    setShowEditModal(false);
+    setEditItem(null);
+    setEditNewImage(null);
+    setEditPreviewUrl('');
+    load();
+  };
+
   const handleDelete = async (id: number) => {
-    if (confirm('Delete this gallery image?')) {
-      await galleryApi.delete(id);
-      load();
-    }
+    await galleryApi.delete(id);
+    load();
   };
 
   if (loading) return <Loader />;
@@ -128,7 +140,7 @@ export default function ManageGallery() {
               <button type="button" className="admin-gallery-card__edit" onClick={() => openEdit(item)}>
                 Edit
               </button>
-              <button type="button" className="admin-gallery-card__delete" onClick={() => handleDelete(item.id)}>
+              <button type="button" className="admin-gallery-card__delete" onClick={() => setDeleteTarget(item)}>
                 Delete
               </button>
             </div>
@@ -180,13 +192,24 @@ export default function ManageGallery() {
                     Remove New Photo
                   </button>
                 ) : (
-                  <button
-                    type="button"
-                    className="btn-change"
-                    onClick={() => editFileRef.current?.click()}
-                  >
-                    Change Photo
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      className="btn-change"
+                      onClick={() => editFileRef.current?.click()}
+                    >
+                      {hasCurrentPhoto ? 'Change Photo' : 'Add Photo'}
+                    </button>
+                    {hasCurrentPhoto && (
+                      <button
+                        type="button"
+                        className="btn-remove"
+                        onClick={() => setConfirmRemoveInEdit(true)}
+                      >
+                        Remove Photo
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
               <input
@@ -219,6 +242,34 @@ export default function ManageGallery() {
             <button type="button" className="btn-save" onClick={handleEdit}>Save Changes</button>
           </div>
         </Modal>
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Delete Gallery Image"
+          message={`Delete "${deleteTarget.title || 'Untitled'}" from gallery?`}
+          confirmText="Delete"
+          danger
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={async () => {
+            await handleDelete(deleteTarget.id);
+            setDeleteTarget(null);
+          }}
+        />
+      )}
+
+      {confirmRemoveInEdit && editItem && (
+        <ConfirmDialog
+          title="Remove Photo"
+          message="Remove this photo only? The gallery item/card will be kept."
+          confirmText="Remove"
+          danger
+          onCancel={() => setConfirmRemoveInEdit(false)}
+          onConfirm={async () => {
+            await handleRemoveCurrentImage();
+            setConfirmRemoveInEdit(false);
+          }}
+        />
       )}
     </div>
   );

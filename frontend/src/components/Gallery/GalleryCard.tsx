@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { GalleryItem } from '../../types';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { resolveUploadUrl } from '../../utils/apiOrigin';
 import '../../styles/components/_gallery.scss';
 
@@ -10,8 +11,18 @@ interface Props {
 
 export default function GalleryCard({ item }: Props) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const imageUrl = resolveUploadUrl(item.image_url);
   const [lightbox, setLightbox] = useState(false);
+
+  const goOrder = () => {
+    const orderPath = `/order/${item.category_id}`;
+    if (!user) {
+      navigate('/login', { state: { returnTo: orderPath } });
+      return;
+    }
+    navigate(orderPath);
+  };
 
   const openLightbox = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -41,7 +52,7 @@ export default function GalleryCard({ item }: Props) {
                 className="gallery-card__overlay-btn"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/order/${item.category_id}`);
+                  goOrder();
                 }}
               >
                 Order This Style
@@ -57,7 +68,7 @@ export default function GalleryCard({ item }: Props) {
         <button
           type="button"
           className="gallery-card__order-btn"
-          onClick={() => navigate(`/order/${item.category_id}`)}
+          onClick={goOrder}
         >
           Order This Style
         </button>
@@ -79,7 +90,7 @@ export default function GalleryCard({ item }: Props) {
                 className="lightbox__order-btn"
                 onClick={() => {
                   closeLightbox();
-                  navigate(`/order/${item.category_id}`);
+                  goOrder();
                 }}
               >
                 Order This Style

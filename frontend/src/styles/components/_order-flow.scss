@@ -489,6 +489,18 @@
     }
   }
 
+  &__date-note {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: $border-radius-sm;
+    border: 1px solid rgba($gold, 0.35);
+    background: rgba($gold, 0.1);
+    color: $gold-dark;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
   &__details {
     margin: 32px 0;
     background: $cream;

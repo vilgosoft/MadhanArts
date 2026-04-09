@@ -95,14 +95,14 @@ export default function ManageUsers() {
             <tbody>
               {users.map((u) => (
                 <tr key={u.id}>
-                  <td>{u.id}</td>
-                  <td><strong>{u.name}</strong></td>
-                  <td>{u.email || '—'}</td>
-                  <td>{u.phone || '—'}</td>
-                  <td style={{ fontSize: '0.85rem', color: '#999' }}>
+                  <td data-label="ID">{u.id}</td>
+                  <td data-label="Name"><strong>{u.name}</strong></td>
+                  <td data-label="Email">{u.email || '—'}</td>
+                  <td data-label="Phone">{u.phone || '—'}</td>
+                  <td data-label="Registered" style={{ fontSize: '0.85rem', color: '#999' }}>
                     {new Date(u.created_at).toLocaleString('en-IN')}
                   </td>
-                  <td>
+                  <td data-label="Actions">
                     <button
                       type="button"
                       onClick={() => openEdit(u)}

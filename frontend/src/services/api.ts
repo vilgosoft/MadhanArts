@@ -14,7 +14,7 @@ import type {
   AuthUser,
 } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -93,6 +93,9 @@ export const galleryApi = {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
 
+  removeImage: (id: number) =>
+    api.delete<ApiResponse<GalleryItem>>(`/gallery/${id}/image`),
+
   delete: (id: number) =>
     api.delete<ApiResponse<null>>(`/gallery/${id}`),
 };
@@ -169,6 +172,9 @@ export const orderApi = {
 
   updateStatus: (id: number, order_status: string, admin_notes?: string) =>
     api.put<ApiResponse<Order>>(`/orders/${id}/status`, { order_status, admin_notes }),
+
+  downloadPhoto: (id: number) =>
+    api.get<Blob>(`/orders/${id}/photo`, { responseType: 'blob' }),
 };
 
 export default api;

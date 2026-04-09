@@ -39,7 +39,7 @@ export default function MyOrdersPage() {
           <p>You haven't placed any orders yet. Browse our gallery to get started!</p>
         </div>
       ) : (
-        <table className="admin-table">
+        <table className="admin-table admin-table--responsive-cards">
           <thead>
             <tr>
               <th>Order #</th>
@@ -55,26 +55,26 @@ export default function MyOrdersPage() {
           <tbody>
             {orders.map((order) => (
               <tr key={order.id}>
-                <td><strong>{order.order_number}</strong></td>
-                <td>{order.category_name}</td>
-                <td>{order.size_label}</td>
-                <td style={{ fontWeight: 600, color: '#b08930' }}>
+                <td data-label="Order #"><strong>{order.order_number}</strong></td>
+                <td data-label="Art Style">{order.category_name}</td>
+                <td data-label="Size">{order.size_label}</td>
+                <td data-label="Amount" style={{ fontWeight: 600, color: '#b08930' }}>
                   &#8377;{parseFloat(order.amount).toLocaleString('en-IN')}
                 </td>
-                <td style={{ fontSize: '0.85rem', color: '#8a8490' }}>
+                <td data-label="Needed By" style={{ fontSize: '0.85rem', color: '#8a8490' }}>
                   {order.needed_by_date
                     ? new Date(order.needed_by_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
                     : '—'}
                 </td>
-                <td>
+                <td data-label="Status">
                   <span className={`status-badge status-badge--${order.order_status}`}>
                     {order.order_status.replace('_', ' ')}
                   </span>
                 </td>
-                <td style={{ fontSize: '0.85rem', color: '#8a8490' }}>
+                <td data-label="Date" style={{ fontSize: '0.85rem', color: '#8a8490' }}>
                   {new Date(order.created_at).toLocaleDateString('en-IN')}
                 </td>
-                <td>
+                <td data-label="Invoice">
                   <button
                     onClick={() => setInvoiceOrder(order)}
                     style={{

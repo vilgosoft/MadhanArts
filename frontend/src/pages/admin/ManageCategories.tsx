@@ -3,11 +3,13 @@ import { categoryApi } from '../../services/api';
 import type { Category } from '../../types';
 import Modal from '../../components/common/Modal';
 import Loader from '../../components/common/Loader';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
 
 export default function ManageCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Category | null>(null);
   const [editing, setEditing] = useState<Category | null>(null);
   const [form, setForm] = useState({ name: '', description: '', sort_order: 0 });
 
@@ -43,10 +45,8 @@ export default function ManageCategories() {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Delete this category? All gallery items and pricing rules in it will also be deleted.')) {
-      await categoryApi.delete(id);
-      load();
-    }
+    await categoryApi.delete(id);
+    load();
   };
 
   if (loading) return <Loader />;
@@ -71,18 +71,18 @@ export default function ManageCategories() {
         <tbody>
           {categories.map((cat) => (
             <tr key={cat.id}>
-              <td><strong>{cat.name}</strong></td>
-              <td>{cat.slug}</td>
-              <td>{cat.sort_order}</td>
-              <td>
+              <td data-label="Name"><strong>{cat.name}</strong></td>
+              <td data-label="Slug">{cat.slug}</td>
+              <td data-label="Order">{cat.sort_order}</td>
+              <td data-label="Status">
                 <span className={`status-badge ${cat.is_active ? 'status-badge--paid' : 'status-badge--cancelled'}`}>
                   {cat.is_active ? 'Active' : 'Inactive'}
                 </span>
               </td>
-              <td>
+              <td data-label="Actions">
                 <div className="admin-table__actions">
                   <button className="edit" onClick={() => openEdit(cat)}>Edit</button>
-                  <button className="delete" onClick={() => handleDelete(cat.id)}>Delete</button>
+                  <button className="delete" onClick={() => setDeleteTarget(cat)}>Delete</button>
                 </div>
               </td>
             </tr>
@@ -109,6 +109,20 @@ export default function ManageCategories() {
             <button className="btn-save" onClick={handleSave}>Save</button>
           </div>
         </Modal>
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Delete Category"
+          message={`Delete "${deleteTarget.name}"? All gallery items and pricing rules in this category will also be deleted.`}
+          confirmText="Delete"
+          danger
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={async () => {
+            await handleDelete(deleteTarget.id);
+            setDeleteTarget(null);
+          }}
+        />
       )}
     </div>
   );

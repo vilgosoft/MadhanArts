@@ -3,11 +3,9 @@ import { orderApi } from '../../services/api';
 import type { Order, OrderStatus } from '../../types';
 import Loader from '../../components/common/Loader';
 import Invoice from '../../components/Invoice/Invoice';
-import { getApiOrigin } from '../../utils/apiOrigin';
 import '../../styles/components/_admin.scss';
 
 const STATUS_OPTIONS: OrderStatus[] = ['received', 'in_progress', 'completed', 'delivered', 'cancelled'];
-const apiOrigin = getApiOrigin();
 
 export default function ManageOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -36,6 +34,23 @@ export default function ManageOrders() {
     load();
   };
 
+  const handlePhotoDownload = async (order: Order) => {
+    try {
+      const res = await orderApi.downloadPhoto(order.id);
+      const blobUrl = window.URL.createObjectURL(res.data);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      const extension = (order.reference_photo?.split('.').pop() || 'jpg').toLowerCase();
+      a.download = `${order.order_number}-reference.${extension}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch {
+      alert('Unable to download photo. Please check admin login and API setup.');
+    }
+  };
+
   return (
     <div>
       <div className="admin-page-header">
@@ -56,7 +71,7 @@ export default function ManageOrders() {
         <Loader />
       ) : (
         <>
-          <table className="admin-table">
+          <table className="admin-table admin-table--responsive-cards">
             <thead>
               <tr>
                 <th>Order #</th>
@@ -74,29 +89,28 @@ export default function ManageOrders() {
             <tbody>
               {orders.map((order) => (
                 <tr key={order.id}>
-                  <td><strong>{order.order_number}</strong></td>
-                  <td>{order.user_name}</td>
-                  <td>{order.category_name}</td>
-                  <td>{order.size_label}</td>
-                  <td style={{ fontWeight: 600, color: '#b08930' }}>
+                  <td data-label="Order #"><strong>{order.order_number}</strong></td>
+                  <td data-label="Customer">{order.user_name}</td>
+                  <td data-label="Category">{order.category_name}</td>
+                  <td data-label="Size">{order.size_label}</td>
+                  <td data-label="Amount" style={{ fontWeight: 600, color: '#b08930' }}>
                     &#8377;{parseFloat(order.amount).toLocaleString('en-IN')}
                   </td>
-                  <td style={{ fontSize: '0.82rem', color: '#8a8490' }}>
+                  <td data-label="Needed By" style={{ fontSize: '0.82rem', color: '#8a8490' }}>
                     {order.needed_by_date
                       ? new Date(order.needed_by_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
                       : '—'}
                   </td>
-                  <td>
-                    <a
-                      href={`${apiOrigin}/api/orders/${order.id}/photo`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: '#d4a853', fontWeight: 600, fontSize: '0.82rem' }}
+                  <td data-label="Photo">
+                    <button
+                      type="button"
+                      className="admin-link-btn"
+                      onClick={() => handlePhotoDownload(order)}
                     >
                       Download
-                    </a>
+                    </button>
                   </td>
-                  <td>
+                  <td data-label="Status">
                     <select
                       value={order.order_status}
                       onChange={(e) => handleStatusChange(order.id, e.target.value)}
@@ -114,10 +128,10 @@ export default function ManageOrders() {
                       ))}
                     </select>
                   </td>
-                  <td style={{ fontSize: '0.82rem', color: '#8a8490' }}>
+                  <td data-label="Date" style={{ fontSize: '0.82rem', color: '#8a8490' }}>
                     {new Date(order.created_at).toLocaleDateString('en-IN')}
                   </td>
-                  <td>
+                  <td data-label="Invoice">
                     <button
                       onClick={() => setInvoiceOrder(order)}
                       style={{

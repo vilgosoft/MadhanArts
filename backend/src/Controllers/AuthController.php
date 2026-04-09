@@ -11,6 +11,18 @@ use Firebase\JWT\JWT;
 
 class AuthController
 {
+    private static function normalizePhone(?string $phone): ?string
+    {
+        if ($phone === null) {
+            return null;
+        }
+        $digits = preg_replace('/\D+/', '', trim($phone)) ?? '';
+        if ($digits === '') {
+            return null;
+        }
+        return strlen($digits) > 10 ? substr($digits, -10) : $digits;
+    }
+
     /**
      * POST /api/auth/admin/login
      * Body: { email, password }
@@ -64,10 +76,14 @@ class AuthController
         $email = isset($body['email']) ? trim((string) $body['email']) : '';
         $phone = isset($body['phone']) ? trim((string) $body['phone']) : '';
         $email = $email !== '' ? $email : null;
-        $phone = $phone !== '' ? $phone : null;
+        $phone = self::normalizePhone($phone !== '' ? $phone : null);
 
-        if ($email === null && $phone === null) {
-            Response::error('Email or phone is required', 422);
+        if ($phone === null) {
+            Response::error('Phone number is required', 422);
+        }
+
+        if (!preg_match('/^\d{10}$/', $phone)) {
+            Response::error('Please enter a valid 10-digit phone number', 422);
         }
 
         if ($email !== null && !Validator::isValidEmail($email)) {
@@ -131,14 +147,18 @@ class AuthController
         $body = Validator::getJsonBody();
 
         if (empty($body['email']) && empty($body['phone'])) {
-            Response::error('Email or phone is required', 422);
+            Response::error('Phone number is required', 422);
         }
 
         $user = null;
         if (!empty($body['email'])) {
             $user = User::findByEmail($body['email']);
         } elseif (!empty($body['phone'])) {
-            $user = User::findByPhone($body['phone']);
+            $normalizedPhone = self::normalizePhone((string) $body['phone']);
+            if ($normalizedPhone === null || !preg_match('/^\d{10}$/', $normalizedPhone)) {
+                Response::error('Please enter a valid 10-digit phone number', 422);
+            }
+            $user = User::findByPhone($normalizedPhone);
         }
 
         if (!$user) {
