@@ -21,6 +21,8 @@ backend/database/*.sqlite
 
 # Build output
 frontend/dist/
+deploy/output/
+frontend/.env.production
 
 # IDE
 .vscode/
