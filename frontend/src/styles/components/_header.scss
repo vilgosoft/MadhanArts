@@ -51,15 +51,16 @@
     &-svg {
       transition: $transition;
       flex-shrink: 0;
+      border-radius: 4px;
 
       @include mobile {
-        width: 32px !important;
-        height: 32px !important;
+        width: 36px !important;
+        height: 36px !important;
       }
     }
 
     &:hover &-svg {
-      transform: rotate(8deg) scale(1.08);
+      transform: scale(1.08);
     }
 
     &-text {
