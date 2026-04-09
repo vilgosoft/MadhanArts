@@ -23,6 +23,8 @@ export default function OrderWizard() {
   const [sizeLabel, setSizeLabel] = useState('');
   const [price, setPrice] = useState('');
   const [currency, setCurrency] = useState('INR');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [neededByDate, setNeededByDate] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -39,6 +41,7 @@ export default function OrderWizard() {
   const canNext = () => {
     if (step === 0) return !!photo;
     if (step === 1) return !!selectedSizeId;
+    if (step === 2) return deliveryAddress.trim().length > 0 && neededByDate.length > 0;
     return true;
   };
 
@@ -56,6 +59,8 @@ export default function OrderWizard() {
       formData.append('reference_photo', photo!);
       formData.append('category_id', String(category.id));
       formData.append('size_id', String(selectedSizeId));
+      formData.append('delivery_address', deliveryAddress.trim());
+      if (neededByDate) formData.append('needed_by_date', neededByDate);
 
       const res = await orderApi.create(formData);
       navigate('/order-success', { state: { order: res.data.data } });
@@ -130,6 +135,10 @@ export default function OrderWizard() {
                 price={price}
                 currency={currency}
                 photoPreview={photo ? URL.createObjectURL(photo) : null}
+                deliveryAddress={deliveryAddress}
+                neededByDate={neededByDate}
+                onAddressChange={setDeliveryAddress}
+                onDateChange={setNeededByDate}
               />
               {error && <div className="wizard-error">{error}</div>}
             </>

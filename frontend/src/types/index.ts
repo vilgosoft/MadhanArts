@@ -85,6 +85,8 @@ export interface Order {
   size_id: number;
   pricing_rule_id: number;
   reference_photo: string;
+  delivery_address: string;
+  needed_by_date: string | null;
   amount: string;
   currency: string;
   payment_gateway: string | null;
@@ -95,6 +97,8 @@ export interface Order {
   category_name: string;
   size_label: string;
   user_name?: string;
+  user_email?: string;
+  user_phone?: string;
   created_at: string;
   updated_at: string;
 }

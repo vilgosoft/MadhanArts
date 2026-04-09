@@ -122,6 +122,8 @@ CREATE TABLE orders (
   size_id           INT UNSIGNED  NOT NULL,
   pricing_rule_id   INT UNSIGNED  NOT NULL,
   reference_photo   VARCHAR(500)  NOT NULL,              -- uploaded photo path
+  delivery_address  TEXT          NOT NULL,              -- customer delivery address
+  needed_by_date    DATE          NULL,                  -- when customer needs the order
   amount            DECIMAL(10,2) NOT NULL,
   currency          VARCHAR(3)    DEFAULT 'INR',
   payment_gateway   VARCHAR(20)   NULL,                  -- 'stripe' or 'razorpay'

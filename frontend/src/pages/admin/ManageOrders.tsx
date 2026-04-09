@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { orderApi } from '../../services/api';
 import type { Order, OrderStatus } from '../../types';
 import Loader from '../../components/common/Loader';
+import Invoice from '../../components/Invoice/Invoice';
 import { getApiOrigin } from '../../utils/apiOrigin';
 import '../../styles/components/_admin.scss';
 
@@ -15,6 +16,7 @@ export default function ManageOrders() {
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('');
+  const [invoiceOrder, setInvoiceOrder] = useState<Order | null>(null);
 
   const load = (p = page) => {
     setLoading(true);
@@ -62,9 +64,11 @@ export default function ManageOrders() {
                 <th>Category</th>
                 <th>Size</th>
                 <th>Amount</th>
+                <th>Needed By</th>
                 <th>Photo</th>
                 <th>Status</th>
                 <th>Date</th>
+                <th>Invoice</th>
               </tr>
             </thead>
             <tbody>
@@ -76,6 +80,11 @@ export default function ManageOrders() {
                   <td>{order.size_label}</td>
                   <td style={{ fontWeight: 600, color: '#b08930' }}>
                     &#8377;{parseFloat(order.amount).toLocaleString('en-IN')}
+                  </td>
+                  <td style={{ fontSize: '0.82rem', color: '#8a8490' }}>
+                    {order.needed_by_date
+                      ? new Date(order.needed_by_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+                      : '—'}
                   </td>
                   <td>
                     <a
@@ -108,6 +117,23 @@ export default function ManageOrders() {
                   <td style={{ fontSize: '0.82rem', color: '#8a8490' }}>
                     {new Date(order.created_at).toLocaleDateString('en-IN')}
                   </td>
+                  <td>
+                    <button
+                      onClick={() => setInvoiceOrder(order)}
+                      style={{
+                        padding: '6px 16px',
+                        borderRadius: '20px',
+                        border: 'none',
+                        background: 'rgba(212,168,83,0.12)',
+                        color: '#b08930',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      View
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -127,6 +153,10 @@ export default function ManageOrders() {
             </div>
           )}
         </>
+      )}
+
+      {invoiceOrder && (
+        <Invoice order={invoiceOrder} onClose={() => setInvoiceOrder(null)} />
       )}
     </div>
   );

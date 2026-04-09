@@ -87,6 +87,8 @@ CREATE TABLE orders (
   size_id           INTEGER NOT NULL,
   pricing_rule_id   INTEGER NOT NULL,
   reference_photo   TEXT NOT NULL,
+  delivery_address  TEXT NOT NULL DEFAULT '',
+  needed_by_date    TEXT,
   amount            REAL NOT NULL,
   currency          TEXT DEFAULT 'INR',
   payment_gateway   TEXT,

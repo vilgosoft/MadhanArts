@@ -26,10 +26,10 @@ class Order
         $stmt = $db->prepare(
             'INSERT INTO orders
                 (order_number, user_id, category_id, size_id, pricing_rule_id,
-                 reference_photo, amount, currency, payment_gateway)
+                 reference_photo, delivery_address, needed_by_date, amount, currency, payment_gateway)
              VALUES
                 (:order_number, :user_id, :category_id, :size_id, :pricing_rule_id,
-                 :reference_photo, :amount, :currency, :payment_gateway)'
+                 :reference_photo, :delivery_address, :needed_by_date, :amount, :currency, :payment_gateway)'
         );
         $stmt->execute([
             'order_number'    => $data['order_number'],
@@ -38,6 +38,8 @@ class Order
             'size_id'         => $data['size_id'],
             'pricing_rule_id' => $data['pricing_rule_id'],
             'reference_photo' => $data['reference_photo'],
+            'delivery_address' => $data['delivery_address'],
+            'needed_by_date'  => $data['needed_by_date'] ?? null,
             'amount'          => $data['amount'],
             'currency'        => $data['currency'] ?? 'INR',
             'payment_gateway' => $data['payment_gateway'] ?? null,
@@ -49,7 +51,8 @@ class Order
     {
         $db = Database::getConnection();
         $stmt = $db->prepare(
-            'SELECT o.*, c.name AS category_name, s.label AS size_label, u.name AS user_name
+            'SELECT o.*, c.name AS category_name, s.label AS size_label,
+                    u.name AS user_name, u.email AS user_email, u.phone AS user_phone
              FROM orders o
              JOIN categories c ON o.category_id = c.id
              JOIN sizes s ON o.size_id = s.id
@@ -65,10 +68,12 @@ class Order
     {
         $db = Database::getConnection();
         $stmt = $db->prepare(
-            'SELECT o.*, c.name AS category_name, s.label AS size_label
+            'SELECT o.*, c.name AS category_name, s.label AS size_label,
+                    u.name AS user_name, u.email AS user_email, u.phone AS user_phone
              FROM orders o
              JOIN categories c ON o.category_id = c.id
              JOIN sizes s ON o.size_id = s.id
+             JOIN users u ON o.user_id = u.id
              WHERE o.user_id = :user_id
              ORDER BY o.created_at DESC'
         );
@@ -88,7 +93,8 @@ class Order
             $params['status'] = $status;
         }
 
-        $sql = "SELECT o.*, c.name AS category_name, s.label AS size_label, u.name AS user_name
+        $sql = "SELECT o.*, c.name AS category_name, s.label AS size_label,
+                       u.name AS user_name, u.email AS user_email, u.phone AS user_phone
                 FROM orders o
                 JOIN categories c ON o.category_id = c.id
                 JOIN sizes s ON o.size_id = s.id

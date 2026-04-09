@@ -27,9 +27,14 @@ class OrderController
         if (empty($_POST['category_id']) || empty($_POST['size_id'])) {
             Response::error('category_id and size_id are required', 422);
         }
+        if (empty($_POST['delivery_address'])) {
+            Response::error('Delivery address is required', 422);
+        }
 
-        $categoryId = (int) $_POST['category_id'];
-        $sizeId     = (int) $_POST['size_id'];
+        $categoryId      = (int) $_POST['category_id'];
+        $sizeId          = (int) $_POST['size_id'];
+        $deliveryAddress = trim($_POST['delivery_address']);
+        $neededByDate    = !empty($_POST['needed_by_date']) ? $_POST['needed_by_date'] : null;
 
         // Validate category and size exist
         if (!Category::findById($categoryId)) {
@@ -80,6 +85,8 @@ class OrderController
             'size_id'         => $sizeId,
             'pricing_rule_id' => $pricing['id'],
             'reference_photo' => $photoPath,
+            'delivery_address' => $deliveryAddress,
+            'needed_by_date'  => $neededByDate,
             'amount'          => $pricing['price'],
             'currency'        => $pricing['currency'],
         ]);

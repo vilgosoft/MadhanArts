@@ -48,6 +48,12 @@ export default function OrderSuccessPage() {
                 &#8377;{parseFloat(order.amount).toLocaleString('en-IN')}
               </td>
             </tr>
+            {order.needed_by_date && (
+              <tr>
+                <td>Needed By</td>
+                <td>{new Date(order.needed_by_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
