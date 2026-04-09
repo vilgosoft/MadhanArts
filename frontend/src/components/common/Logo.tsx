@@ -9,82 +9,48 @@ export default function Logo({ size = 40, className = '' }: LogoProps) {
       className={className}
       width={size}
       height={size}
-      viewBox="0 0 512 512"
+      viewBox="0 0 100 100"
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
         <linearGradient id="logoGold" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#c9943e" />
-          <stop offset="40%" stopColor="#e8c97a" />
+          <stop offset="50%" stopColor="#e8c97a" />
           <stop offset="100%" stopColor="#b8862d" />
         </linearGradient>
-        <linearGradient id="logoBg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#1a1a28" />
-          <stop offset="100%" stopColor="#252538" />
+        <linearGradient id="logoPaint" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#d4a853" />
+          <stop offset="100%" stopColor="#e8c97a" />
         </linearGradient>
-        <linearGradient id="logoBrush" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#e8c97a" />
-          <stop offset="100%" stopColor="#d4a853" />
-        </linearGradient>
-        <filter id="logoGlow">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
       </defs>
 
-      {/* Background circle */}
-      <circle cx="256" cy="256" r="250" fill="url(#logoBg)" />
-      <circle cx="256" cy="256" r="246" fill="none" stroke="url(#logoGold)" strokeWidth="4" />
-      <circle cx="256" cy="256" r="236" fill="none" stroke="url(#logoGold)" strokeWidth="1" opacity="0.3" />
-
-      {/* Decorative brush stroke behind the M */}
+      {/* Brush handle */}
+      <rect
+        x="58" y="8" width="10" height="40" rx="3"
+        transform="rotate(35 63 28)"
+        fill="#5c4a32"
+      />
+      {/* Ferrule (metal band) */}
+      <rect
+        x="56" y="44" width="12" height="8" rx="2"
+        transform="rotate(35 62 48)"
+        fill="#a89070"
+      />
+      {/* Bristles */}
       <path
-        d="M100 350 Q150 200, 256 160 Q362 120, 420 200 Q440 240, 400 280 Q340 340, 260 360 Q180 380, 120 360 Q100 355, 100 350Z"
+        d="M38 58 Q42 50, 50 52 L56 56 Q52 64, 44 68 Q36 72, 32 66 Q30 62, 38 58Z"
         fill="url(#logoGold)"
-        opacity="0.08"
       />
-
-      {/* Paintbrush diagonal stroke */}
+      {/* Paint stroke left by brush */}
       <path
-        d="M340 130 Q360 140, 370 170 L385 220 Q390 240, 375 250 L360 255 Q350 258, 345 248 L325 185 Q320 165, 330 145 Z"
-        fill="url(#logoBrush)"
-        opacity="0.6"
-        filter="url(#logoGlow)"
+        d="M18 72 Q24 60, 36 64 Q44 68, 38 78 Q34 86, 26 88 Q16 90, 14 82 Q12 76, 18 72Z"
+        fill="url(#logoPaint)"
+        opacity="0.85"
       />
-      {/* Brush tip */}
-      <ellipse cx="378" cy="135" rx="12" ry="20" transform="rotate(-30 378 135)" fill="#e8c97a" opacity="0.4" />
-
-      {/* Bold M letter */}
-      <text
-        x="245"
-        y="320"
-        textAnchor="middle"
-        fontFamily="'Playfair Display', Georgia, serif"
-        fontSize="240"
-        fontWeight="900"
-        fill="url(#logoGold)"
-        letterSpacing="-6"
-      >
-        M
-      </text>
-
-      {/* Small paint dots */}
-      <circle cx="380" cy="310" r="10" fill="#e8c97a" opacity="0.5" />
-      <circle cx="405" cy="285" r="6" fill="#d4a853" opacity="0.35" />
-      <circle cx="395" cy="340" r="4" fill="#e8c97a" opacity="0.25" />
-
-      {/* Bottom accent line */}
-      <path
-        d="M180 375 Q256 395, 340 375"
-        fill="none"
-        stroke="url(#logoGold)"
-        strokeWidth="3"
-        strokeLinecap="round"
-        opacity="0.5"
-      />
+      {/* Small paint splatter dots */}
+      <circle cx="22" cy="68" r="3" fill="#e8c97a" opacity="0.6" />
+      <circle cx="48" cy="78" r="2.5" fill="#d4a853" opacity="0.5" />
+      <circle cx="14" cy="62" r="2" fill="#e8c97a" opacity="0.4" />
     </svg>
   );
 }
