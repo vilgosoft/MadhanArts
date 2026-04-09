@@ -72,6 +72,19 @@ export default function Header() {
           {user && !isAdmin && <Link to="/my-orders">My Orders</Link>}
           {isAdmin && <Link to="/admin">Admin Panel</Link>}
           {!user && <Link to="/login">Login / Register</Link>}
+          {user && (
+            <button
+              type="button"
+              className="mobile-nav__logout"
+              onClick={(e) => {
+                e.stopPropagation();
+                setMobileOpen(false);
+                handleLogout();
+              }}
+            >
+              Logout
+            </button>
+          )}
         </nav>
       )}
     </>

@@ -250,4 +250,24 @@
       }
     }
   }
+
+  &__logout {
+    margin-top: auto;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #e74c3c;
+    padding: 16px 20px;
+    border-radius: $border-radius;
+    border: 1.5px solid rgba(#e74c3c, 0.2);
+    background: rgba(#e74c3c, 0.04);
+    cursor: pointer;
+    text-align: left;
+    transition: $transition;
+    font-family: $font-body;
+
+    &:hover {
+      background: rgba(#e74c3c, 0.1);
+      border-color: rgba(#e74c3c, 0.4);
+    }
+  }
 }
