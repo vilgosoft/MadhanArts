@@ -1,20 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
   <defs>
     <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#c9943e"/>
+      <stop offset="0%" style="stop-color:#d4a853"/>
       <stop offset="50%" style="stop-color:#e8c97a"/>
       <stop offset="100%" style="stop-color:#b8862d"/>
     </linearGradient>
-    <linearGradient id="paint" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#d4a853"/>
-      <stop offset="100%" style="stop-color:#e8c97a"/>
+    <linearGradient id="handle" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6b5035"/>
+      <stop offset="100%" style="stop-color:#4a3525"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#c0c0c0"/>
+      <stop offset="50%" style="stop-color:#e8e8e8"/>
+      <stop offset="100%" style="stop-color:#a0a0a0"/>
     </linearGradient>
   </defs>
-  <rect x="58" y="8" width="10" height="40" rx="3" transform="rotate(35 63 28)" fill="#5c4a32"/>
-  <rect x="56" y="44" width="12" height="8" rx="2" transform="rotate(35 62 48)" fill="#a89070"/>
-  <path d="M38 58 Q42 50, 50 52 L56 56 Q52 64, 44 68 Q36 72, 32 66 Q30 62, 38 58Z" fill="url(#gold)"/>
-  <path d="M18 72 Q24 60, 36 64 Q44 68, 38 78 Q34 86, 26 88 Q16 90, 14 82 Q12 76, 18 72Z" fill="url(#paint)" opacity="0.85"/>
-  <circle cx="22" cy="68" r="3" fill="#e8c97a" opacity="0.6"/>
-  <circle cx="48" cy="78" r="2.5" fill="#d4a853" opacity="0.5"/>
-  <circle cx="14" cy="62" r="2" fill="#e8c97a" opacity="0.4"/>
+  <circle cx="60" cy="60" r="56" fill="#1e1e2a"/>
+  <circle cx="60" cy="60" r="54" fill="none" stroke="url(#gold)" stroke-width="1.5" opacity="0.6"/>
+  <rect x="78" y="12" width="8" height="38" rx="3" transform="rotate(35 82 31)" fill="url(#handle)"/>
+  <rect x="72" y="44" width="10" height="7" rx="1.5" transform="rotate(35 77 47.5)" fill="url(#metal)"/>
+  <path d="M62 55 Q66 48, 72 50 L76 53 Q73 60, 66 64 Q60 67, 56 62 Q54 58, 62 55Z" fill="url(#gold)"/>
+  <circle cx="52" cy="68" r="3" fill="#e8c97a" opacity="0.5"/>
+  <circle cx="58" cy="72" r="2" fill="#d4a853" opacity="0.4"/>
+  <text x="60" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="52" font-weight="900" font-style="italic" fill="url(#gold)">M</text>
+  <circle cx="28" cy="72" r="2" fill="#e8c97a" opacity="0.35"/>
+  <circle cx="92" cy="72" r="2" fill="#e8c97a" opacity="0.35"/>
 </svg>
