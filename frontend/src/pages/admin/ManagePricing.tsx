@@ -49,7 +49,7 @@ export default function ManagePricing() {
       await pricingApi.update(editing.id, {
         category_id: Number(form.category_id),
         size_id: Number(form.size_id),
-        price: Number(form.price),
+        price: form.price,
       });
     } else {
       await pricingApi.create({
