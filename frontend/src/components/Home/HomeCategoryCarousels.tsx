@@ -1,10 +1,13 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useCategoryCarouselLayout } from '../../hooks/useCategoryCarouselLayout';
 import { useNavigate } from 'react-router-dom';
+import Slider from '../../utils/reactSlickSlider';
 import { useAuth } from '../../context/AuthContext';
 import { categoryApi, galleryApi, pricingApi } from '../../services/api';
 import type { Category, GalleryItem } from '../../types';
 import { resolveUploadUrl } from '../../utils/apiOrigin';
 import Loader from '../common/Loader';
+import 'slick-carousel/slick/slick.css';
 import '../../styles/components/_home-category-carousels.scss';
 
 const CAROUSEL_LIMIT = 4;
@@ -20,7 +23,11 @@ function formatFromPrice(min: number, currency: string): string {
 }
 
 const AUTO_SCROLL_MS = 4000;
-const MOBILE_BP = 576;
+
+/** Common DB typo — display-only fix */
+function displayCategoryName(name: string): string {
+  return name.replace(/\bPotrait\b/gi, 'Portrait');
+}
 
 function CategoryCarousel({
   category,
@@ -33,9 +40,10 @@ function CategoryCarousel({
 }) {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [canPrev, setCanPrev] = useState(false);
-  const [canNext, setCanNext] = useState(false);
+  const sliderRef = useRef<InstanceType<typeof Slider> | null>(null);
+  const lightboxRef = useRef<InstanceType<typeof Slider> | null>(null);
+  const layout = useCategoryCarouselLayout(items.length, AUTO_SCROLL_MS);
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
 
   const goOrder = () => {
     const orderPath = `/order/${category.id}`;
@@ -46,56 +54,48 @@ function CategoryCarousel({
     navigate(orderPath);
   };
 
-  const updateNav = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    setCanPrev(scrollLeft > 6);
-    setCanNext(scrollLeft < scrollWidth - clientWidth - 6);
-  }, []);
+  const sliderSettings = useMemo(
+    () => ({
+      dots: false,
+      infinite: items.length > 1,
+      speed: 450,
+      cssEase: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      slidesToShow: layout.slidesToShow,
+      slidesToScroll: layout.slidesToScroll,
+      autoplay: layout.autoplay,
+      autoplaySpeed: layout.autoplaySpeed,
+      arrows: false,
+      swipe: true,
+      touchMove: true,
+      touchThreshold: 5,
+      pauseOnHover: true,
+    }),
+    [
+      items.length,
+      layout.slidesToShow,
+      layout.slidesToScroll,
+      layout.autoplay,
+      layout.autoplaySpeed,
+      layout.layoutKey,
+    ]
+  );
 
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    updateNav();
-    el.addEventListener('scroll', updateNav, { passive: true });
-    const ro = new ResizeObserver(updateNav);
-    ro.observe(el);
-    return () => {
-      el.removeEventListener('scroll', updateNav);
-      ro.disconnect();
-    };
-  }, [items, updateNav]);
+  const lightboxSettings = useMemo(
+    () => ({
+      dots: false,
+      infinite: items.length > 1,
+      speed: 350,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: false,
+      swipe: true,
+      touchMove: true,
+      adaptiveHeight: true,
+    }),
+    [items.length]
+  );
 
-  // Auto-scroll on mobile
-  useEffect(() => {
-    if (items.length <= 1) return;
-    const isMobile = () => window.innerWidth <= MOBILE_BP;
-    if (!isMobile()) return;
-
-    const timer = setInterval(() => {
-      if (!isMobile()) return;
-      const el = trackRef.current;
-      if (!el) return;
-      const { scrollLeft, scrollWidth, clientWidth } = el;
-      if (scrollLeft >= scrollWidth - clientWidth - 6) {
-        el.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        el.scrollBy({ left: clientWidth, behavior: 'smooth' });
-      }
-    }, AUTO_SCROLL_MS);
-
-    return () => clearInterval(timer);
-  }, [items.length]);
-
-  const scrollByDir = (dir: -1 | 1) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const card = el.querySelector<HTMLElement>('.category-carousel__card');
-    const gap = window.innerWidth <= MOBILE_BP ? 0 : 18;
-    const step = (card?.offsetWidth ?? 280) + gap;
-    el.scrollBy({ left: dir * step, behavior: 'smooth' });
-  };
+  const closePreview = () => setPreviewIndex(null);
 
   return (
     <section className="category-carousel-section" aria-labelledby={`cat-head-${category.id}`}>
@@ -103,7 +103,7 @@ function CategoryCarousel({
         <div className="category-carousel-section__head">
           <div>
             <h2 className="category-carousel-section__title" id={`cat-head-${category.id}`}>
-              {category.name}
+              {displayCategoryName(category.name)}
             </h2>
             {category.description ? (
               <p className="category-carousel-section__desc">{category.description}</p>
@@ -123,50 +123,59 @@ function CategoryCarousel({
           </div>
         ) : (
           <div className="category-carousel">
-            <div className="category-carousel__row">
+            <div className="category-carousel__frame">
               <button
                 type="button"
-                className="category-carousel__nav"
-                aria-label="Scroll left"
-                disabled={!canPrev}
-                onClick={() => scrollByDir(-1)}
+                className="category-carousel__nav category-carousel__nav--prev"
+                aria-label="Previous slide"
+                disabled={items.length <= 1}
+                onClick={() => sliderRef.current?.slickPrev()}
               >
                 &#8249;
               </button>
-              <div ref={trackRef} className="category-carousel__track" role="list">
-                {items.map((item) => (
-                  <article key={item.id} className="category-carousel__card" role="listitem">
-                    <button
-                      type="button"
-                      className="category-carousel__image-link"
-                      onClick={goOrder}
-                      aria-label={item.title ? `View order options: ${item.title}` : 'View order options'}
-                    >
-                      <img
-                        className="category-carousel__image"
-                        src={resolveUploadUrl(item.image_url)}
-                        alt={item.title || category.name}
-                        loading="lazy"
-                      />
-                    </button>
-                    <div className="category-carousel__meta">
-                      {item.title ? <h3 className="category-carousel__item-title">{item.title}</h3> : null}
-                      {minPrice ? (
-                        <p className="category-carousel__from">{formatFromPrice(minPrice.min, minPrice.currency)}</p>
-                      ) : null}
-                      <button type="button" className="category-carousel__card-order" onClick={goOrder}>
-                        Order this style
-                      </button>
+              <div className="category-carousel__slick-wrap">
+                <Slider
+                  key={`${category.id}-${layout.layoutKey}`}
+                  ref={sliderRef}
+                  className="category-carousel__slider"
+                  {...sliderSettings}
+                >
+                  {items.map((item, idx) => (
+                    <div key={item.id} className="category-carousel__slide">
+                      <article className="category-carousel__card" role="listitem">
+                        <button
+                          type="button"
+                          className="category-carousel__image-link"
+                          onClick={() => setPreviewIndex(idx)}
+                          aria-label={item.title ? `View order options: ${item.title}` : 'View order options'}
+                        >
+                          <img
+                            className="category-carousel__image"
+                            src={resolveUploadUrl(item.image_url)}
+                            alt={item.title || category.name}
+                            loading="lazy"
+                          />
+                        </button>
+                        <div className="category-carousel__meta">
+                          {item.title ? <h3 className="category-carousel__item-title">{item.title}</h3> : null}
+                          {minPrice ? (
+                            <p className="category-carousel__from">{formatFromPrice(minPrice.min, minPrice.currency)}</p>
+                          ) : null}
+                          <button type="button" className="category-carousel__card-order" onClick={goOrder}>
+                            Order this style
+                          </button>
+                        </div>
+                      </article>
                     </div>
-                  </article>
-                ))}
+                  ))}
+                </Slider>
               </div>
               <button
                 type="button"
-                className="category-carousel__nav"
-                aria-label="Scroll right"
-                disabled={!canNext}
-                onClick={() => scrollByDir(1)}
+                className="category-carousel__nav category-carousel__nav--next"
+                aria-label="Next slide"
+                disabled={items.length <= 1}
+                onClick={() => sliderRef.current?.slickNext()}
               >
                 &#8250;
               </button>
@@ -184,6 +193,63 @@ function CategoryCarousel({
           </div>
         )}
       </div>
+      {previewIndex !== null && items[previewIndex] ? (
+        <div className="home-lightbox" onClick={closePreview}>
+          <button type="button" className="home-lightbox__close" onClick={closePreview}>
+            &#10005;
+          </button>
+          {items.length > 1 ? (
+            <>
+              <button
+                type="button"
+                className="home-lightbox__nav home-lightbox__nav--prev"
+                aria-label="Previous artwork"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  lightboxRef.current?.slickPrev();
+                }}
+              >
+                &#8249;
+              </button>
+              <button
+                type="button"
+                className="home-lightbox__nav home-lightbox__nav--next"
+                aria-label="Next artwork"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  lightboxRef.current?.slickNext();
+                }}
+              >
+                &#8250;
+              </button>
+            </>
+          ) : null}
+          <div className="home-lightbox__content" onClick={(e) => e.stopPropagation()}>
+            <Slider
+              key={`${category.id}-${previewIndex}`}
+              ref={lightboxRef}
+              className="home-lightbox__slider"
+              initialSlide={previewIndex}
+              {...lightboxSettings}
+            >
+              {items.map((item) => (
+                <div key={item.id} className="home-lightbox__slide">
+                  <img src={resolveUploadUrl(item.image_url)} alt={item.title || category.name} />
+                  <div className="home-lightbox__info">
+                    <h3>{item.title || displayCategoryName(category.name)}</h3>
+                    {minPrice ? (
+                      <p className="home-lightbox__price">{formatFromPrice(minPrice.min, minPrice.currency)}</p>
+                    ) : null}
+                    <button type="button" className="home-lightbox__order-btn" onClick={goOrder}>
+                      Order This Style
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

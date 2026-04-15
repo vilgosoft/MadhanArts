@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { categoryApi, orderApi } from '../../services/api';
+import { categoryApi, orderApi, paymentApi } from '../../services/api';
 import type { Category } from '../../types';
 import PhotoUpload from './PhotoUpload';
 import SizeSelector from './SizeSelector';
@@ -63,9 +63,15 @@ export default function OrderWizard() {
       if (neededByDate) formData.append('needed_by_date', neededByDate);
 
       const res = await orderApi.create(formData);
-      navigate('/order-success', { state: { order: res.data.data } });
+      const order = res.data.data;
+      const paymentRes = await paymentApi.initiatePhonePe(order.id);
+      const redirectUrl = paymentRes.data.data.redirect_url;
+      if (!redirectUrl) {
+        throw new Error('Payment gateway did not return redirect URL');
+      }
+      window.location.assign(redirectUrl);
     } catch (err: unknown) {
-      let message = 'Failed to place order. Please try again.';
+      let message = 'Failed to place order/payment. Please try again.';
       if (err && typeof err === 'object' && 'response' in err) {
         const axiosErr = err as { response?: { data?: { message?: string } } };
         message = axiosErr.response?.data?.message || message;
@@ -174,7 +180,7 @@ export default function OrderWizard() {
                 disabled={submitting || !canNext()}
                 onClick={handleSubmit}
               >
-                {submitting ? 'Placing Order...' : 'Place Order'}
+                {submitting ? 'Redirecting to PhonePe...' : 'Place Order & Pay'}
               </button>
             )}
           </div>

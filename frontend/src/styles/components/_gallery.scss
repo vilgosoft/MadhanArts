@@ -309,6 +309,18 @@
         font-size: 0.68rem;
       }
     }
+
+    .gallery-card__price {
+      margin: 6px 0 0;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: $gold-dark;
+
+      @include mobile {
+        font-size: 0.7rem;
+        margin-top: 4px;
+      }
+    }
   }
 
   // Mobile order button — visible only on mobile
@@ -392,6 +404,48 @@
     }
   }
 
+  &__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba($white, 0.35);
+    background: rgba(0, 0, 0, 0.45);
+    color: $white;
+    font-size: 1.5rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    transition: $transition-fast;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba($white, 0.7);
+    }
+
+    &--prev {
+      left: max(18px, calc(50% - 360px));
+    }
+
+    &--next {
+      right: max(18px, calc(50% - 360px));
+    }
+
+    @include mobile {
+      width: 38px;
+      height: 38px;
+      font-size: 1.25rem;
+
+      &--prev { left: 8px; }
+      &--next { right: 8px; }
+    }
+  }
+
   &__info {
     padding: 20px 24px;
 
@@ -413,6 +467,13 @@
       display: block;
       margin-bottom: 16px;
     }
+  }
+
+  &__price {
+    margin: -8px 0 14px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $gold-dark;
   }
 
   &__order-btn {

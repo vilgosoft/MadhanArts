@@ -20,6 +20,7 @@ use App\Controllers\SizeController;
 use App\Controllers\PricingController;
 use App\Controllers\OrderController;
 use App\Controllers\UserController;
+use App\Controllers\PaymentController;
 use App\Helpers\Response;
 
 // ──────────────────────────────────────
@@ -139,6 +140,17 @@ $router->put('/api/orders/:id/status', [OrderController::class, 'updateStatus'],
     [[AdminMiddleware::class, 'handle']]);
 $router->get('/api/orders/:id/photo', [OrderController::class, 'downloadPhoto'],
     [[AdminMiddleware::class, 'handle']]);
+$router->delete('/api/orders/:id', [OrderController::class, 'delete'],
+    [[AdminMiddleware::class, 'handle']]);
+
+// ──────────────────────────────────────
+// Payment Routes
+// ──────────────────────────────────────
+$router->post('/api/payments/phonepe/initiate', [PaymentController::class, 'initiatePhonePe'],
+    [[AuthMiddleware::class, 'handle']]);
+$router->get('/api/payments/phonepe/verify/:orderId', [PaymentController::class, 'verifyPhonePe'],
+    [[AuthMiddleware::class, 'handle']]);
+$router->post('/api/payments/phonepe/callback', [PaymentController::class, 'phonePeCallback']);
 
 // ──────────────────────────────────────
 // Resolve the request

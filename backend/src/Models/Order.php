@@ -153,4 +153,54 @@ class Order
         $stmt = $db->prepare($sql);
         return $stmt->execute($params);
     }
+
+    public static function setPaymentAttempt(int $id, string $gateway, string $merchantTxnId): bool
+    {
+        $db = Database::getConnection();
+        $stmt = $db->prepare(
+            'UPDATE orders
+             SET payment_gateway = :gateway,
+                 payment_id = :payment_id,
+                 payment_status = :payment_status
+             WHERE id = :id'
+        );
+        return $stmt->execute([
+            'id' => $id,
+            'gateway' => $gateway,
+            'payment_id' => $merchantTxnId,
+            'payment_status' => 'pending',
+        ]);
+    }
+
+    public static function setPaymentResult(int $id, string $paymentStatus, string $paymentId): bool
+    {
+        $db = Database::getConnection();
+        $stmt = $db->prepare(
+            'UPDATE orders
+             SET payment_status = :payment_status,
+                 payment_id = :payment_id
+             WHERE id = :id'
+        );
+        return $stmt->execute([
+            'id' => $id,
+            'payment_status' => $paymentStatus,
+            'payment_id' => $paymentId,
+        ]);
+    }
+
+    public static function findByPaymentId(string $paymentId): ?array
+    {
+        $db = Database::getConnection();
+        $stmt = $db->prepare('SELECT * FROM orders WHERE payment_id = :payment_id ORDER BY id DESC LIMIT 1');
+        $stmt->execute(['payment_id' => $paymentId]);
+        $result = $stmt->fetch();
+        return $result ?: null;
+    }
+
+    public static function delete(int $id): bool
+    {
+        $db = Database::getConnection();
+        $stmt = $db->prepare('DELETE FROM orders WHERE id = :id');
+        return $stmt->execute(['id' => $id]);
+    }
 }

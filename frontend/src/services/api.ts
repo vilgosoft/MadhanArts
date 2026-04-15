@@ -12,6 +12,8 @@ import type {
   PaginatedUsers,
   UserListRow,
   AuthUser,
+  PhonePeInitiateData,
+  PhonePeVerifyData,
 } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
@@ -175,6 +177,17 @@ export const orderApi = {
 
   downloadPhoto: (id: number) =>
     api.get<Blob>(`/orders/${id}/photo`, { responseType: 'blob' }),
+
+  delete: (id: number) =>
+    api.delete<ApiResponse<null>>(`/orders/${id}`),
+};
+
+export const paymentApi = {
+  initiatePhonePe: (orderId: number) =>
+    api.post<ApiResponse<PhonePeInitiateData>>('/payments/phonepe/initiate', { order_id: orderId }),
+
+  verifyPhonePe: (orderId: number) =>
+    api.get<ApiResponse<PhonePeVerifyData>>(`/payments/phonepe/verify/${orderId}`),
 };
 
 export default api;

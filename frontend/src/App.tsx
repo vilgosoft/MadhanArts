@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import GalleryPage from './pages/GalleryPage';
 import OrderPage from './pages/OrderPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
+import PaymentResultPage from './pages/PaymentResultPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import UserLogin from './components/Auth/UserLogin';
 import AdminLogin from './components/Auth/AdminLogin';
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/order/:categoryId" element={<OrderPage />} />
         <Route path="/order-success" element={<OrderSuccessPage />} />
+        <Route path="/payment-result" element={<PaymentResultPage />} />
         <Route path="/my-orders" element={<MyOrdersPage />} />
         <Route path="/login" element={<UserLogin />} />
         <Route path="/admin/login" element={<AdminLogin />} />

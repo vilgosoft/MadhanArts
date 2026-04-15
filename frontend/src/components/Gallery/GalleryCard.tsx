@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { GalleryItem } from '../../types';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -7,13 +6,14 @@ import '../../styles/components/_gallery.scss';
 
 interface Props {
   item: GalleryItem;
+  onPreview: () => void;
+  fromPrice?: string | null;
 }
 
-export default function GalleryCard({ item }: Props) {
+export default function GalleryCard({ item, onPreview, fromPrice = null }: Props) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const imageUrl = resolveUploadUrl(item.image_url);
-  const [lightbox, setLightbox] = useState(false);
 
   const goOrder = () => {
     const orderPath = `/order/${item.category_id}`;
@@ -26,10 +26,8 @@ export default function GalleryCard({ item }: Props) {
 
   const openLightbox = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setLightbox(true);
+    onPreview();
   };
-
-  const closeLightbox = () => setLightbox(false);
 
   return (
     <>
@@ -63,6 +61,7 @@ export default function GalleryCard({ item }: Props) {
         <div className="gallery-card__info">
           {item.title && <h3>{item.title}</h3>}
           <span>{item.category_name}</span>
+          {fromPrice ? <p className="gallery-card__price">{fromPrice}</p> : null}
         </div>
         {/* Mobile order button */}
         <button
@@ -74,31 +73,6 @@ export default function GalleryCard({ item }: Props) {
         </button>
       </div>
 
-      {/* Lightbox popup */}
-      {lightbox && (
-        <div className="lightbox" onClick={closeLightbox}>
-          <button type="button" className="lightbox__close" onClick={closeLightbox}>
-            &#10005;
-          </button>
-          <div className="lightbox__content" onClick={(e) => e.stopPropagation()}>
-            <img src={imageUrl} alt={item.title || 'Artwork'} />
-            <div className="lightbox__info">
-              <h3>{item.title || 'Untitled'}</h3>
-              <span>{item.category_name}</span>
-              <button
-                type="button"
-                className="lightbox__order-btn"
-                onClick={() => {
-                  closeLightbox();
-                  goOrder();
-                }}
-              >
-                Order This Style
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

@@ -13,4 +13,12 @@ return [
     ],
     'max_upload_size'  => 10 * 1024 * 1024, // 10MB
     'currency'         => 'INR',
+    'frontend_url'     => rtrim(getenv('FRONTEND_URL') ?: 'http://localhost:5173', '/'),
+    'phonepe'          => [
+        'merchant_id'    => getenv('PHONEPE_MERCHANT_ID') ?: '',
+        'salt_key'       => getenv('PHONEPE_SALT_KEY') ?: '',
+        'salt_index'     => getenv('PHONEPE_SALT_INDEX') ?: '1',
+        'base_url'       => rtrim(getenv('PHONEPE_BASE_URL') ?: 'https://api-preprod.phonepe.com/apis/pg-sandbox', '/'),
+        'redirect_path'  => getenv('PHONEPE_REDIRECT_PATH') ?: '/payment-result',
+    ],
 ];

@@ -77,7 +77,11 @@
       }
 
       span {
-        @include text-gradient($gradient-gold);
+        background: none;
+        -webkit-background-clip: unset;
+        background-clip: unset;
+        -webkit-text-fill-color: $charcoal;
+        color: $charcoal;
         font-weight: 900;
         font-style: italic;
       }

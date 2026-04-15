@@ -134,3 +134,18 @@ export interface ApiResponse<T = unknown> {
   message: string;
   data: T;
 }
+
+export interface PhonePeInitiateData {
+  order_id: number;
+  merchant_transaction_id: string;
+  redirect_url: string | null;
+  phonepe?: {
+    state?: string | null;
+    response_code?: string | null;
+  };
+}
+
+export interface PhonePeVerifyData {
+  order: Order;
+  phonepe?: unknown;
+}

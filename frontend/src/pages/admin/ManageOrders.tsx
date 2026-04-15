@@ -3,6 +3,7 @@ import { orderApi } from '../../services/api';
 import type { Order, OrderStatus } from '../../types';
 import Loader from '../../components/common/Loader';
 import Invoice from '../../components/Invoice/Invoice';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
 import '../../styles/components/_admin.scss';
 
 const STATUS_OPTIONS: OrderStatus[] = ['received', 'in_progress', 'completed', 'delivered', 'cancelled'];
@@ -15,6 +16,7 @@ export default function ManageOrders() {
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('');
   const [invoiceOrder, setInvoiceOrder] = useState<Order | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Order | null>(null);
 
   const load = (p = page) => {
     setLoading(true);
@@ -31,6 +33,11 @@ export default function ManageOrders() {
 
   const handleStatusChange = async (orderId: number, newStatus: string) => {
     await orderApi.updateStatus(orderId, newStatus);
+    load();
+  };
+
+  const handleDeleteOrder = async (id: number) => {
+    await orderApi.delete(id);
     load();
   };
 
@@ -84,6 +91,7 @@ export default function ManageOrders() {
                 <th>Status</th>
                 <th>Date</th>
                 <th>Invoice</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -148,6 +156,13 @@ export default function ManageOrders() {
                       View
                     </button>
                   </td>
+                  <td data-label="Actions">
+                    <div className="admin-table__actions">
+                      <button type="button" className="delete" onClick={() => setDeleteTarget(order)}>
+                        Delete
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -171,6 +186,20 @@ export default function ManageOrders() {
 
       {invoiceOrder && (
         <Invoice order={invoiceOrder} onClose={() => setInvoiceOrder(null)} />
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Delete Order"
+          message={`Permanently delete order ${deleteTarget.order_number}? This cannot be undone.`}
+          confirmText="Delete"
+          danger
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={async () => {
+            await handleDeleteOrder(deleteTarget.id);
+            setDeleteTarget(null);
+          }}
+        />
       )}
     </div>
   );

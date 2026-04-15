@@ -94,8 +94,7 @@ class OrderController
         ]);
 
         $order = Order::findById($orderId);
-        self::notifyAdminForNewOrder($order);
-        Response::success($order, 'Order created', 201);
+        Response::success($order, 'Order created. Complete payment to confirm.', 201);
     }
 
     /**
@@ -190,7 +189,32 @@ class OrderController
         exit;
     }
 
-    private static function notifyAdminForNewOrder(array $order): void
+    /**
+     * DELETE /api/orders/:id  (Admin)
+     * Removes order row and reference photo file if present.
+     */
+    public static function delete(array $params): void
+    {
+        $id = (int) $params['id'];
+        $order = Order::findById($id);
+        if (!$order) {
+            Response::error('Order not found', 404);
+        }
+
+        $config = require __DIR__ . '/../../config/app.php';
+        if (!empty($order['reference_photo'])) {
+            $rel = preg_replace('#^/uploads/#', '', $order['reference_photo']);
+            $filePath = $config['upload_path'] . '/' . $rel;
+            if (is_file($filePath)) {
+                @unlink($filePath);
+            }
+        }
+
+        Order::delete($id);
+        Response::success(null, 'Order deleted');
+    }
+
+    public static function notifyAdminForNewOrder(array $order): void
     {
         if (!function_exists('mail')) {
             error_log('Order email notification skipped: mail() unavailable');
