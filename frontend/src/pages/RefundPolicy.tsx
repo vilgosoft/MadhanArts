@@ -14,7 +14,7 @@ export default function RefundPolicy() {
       <div className="legal-page__content">
         <div className="legal-page__container">
           <p className="legal-page__intro">
-            Please read our return and refund policies for <strong>Madhan Arts</strong> carefully.
+            This website is operated by <strong>MANIKANDAN V</strong>.
           </p>
 
           <section className="legal-page__section">
@@ -67,3 +67,4 @@ export default function RefundPolicy() {
     </div>
   );
 }
+

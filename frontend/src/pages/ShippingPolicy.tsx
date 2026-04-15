@@ -14,7 +14,7 @@ export default function ShippingPolicy() {
       <div className="legal-page__content">
         <div className="legal-page__container">
           <p className="legal-page__intro">
-            This policy outlines the shipping and delivery terms for <strong>Madhan Arts</strong>.
+            This website is operated by <strong>MANIKANDAN V</strong>.
           </p>
 
           <section className="legal-page__section">
@@ -58,3 +58,4 @@ export default function ShippingPolicy() {
     </div>
   );
 }
+

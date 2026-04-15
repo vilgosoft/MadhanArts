@@ -14,7 +14,7 @@ export default function TermsConditions() {
       <div className="legal-page__content">
         <div className="legal-page__container">
           <p className="legal-page__intro">
-            This website is Owned &amp; Operated by <strong>Madhan Arts</strong>
+            This website is operated by <strong>MANIKANDAN V</strong>.
           </p>
 
           <section className="legal-page__section">
@@ -41,6 +41,9 @@ export default function TermsConditions() {
 
           <section className="legal-page__section">
             <h2>Platform Ownership</h2>
+            <p>
+              This website is operated by <strong>MANIKANDAN V</strong>.
+            </p>
             <p>
               The Platform is owned by <strong>Madhan Arts</strong>, with its registered operations
               based in India (hereinafter referred to as "Platform Owner", "we", "us", "our").
